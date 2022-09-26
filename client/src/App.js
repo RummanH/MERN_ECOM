@@ -11,7 +11,7 @@ function App() {
         </header>
         <main>
           <Routes>
-            <Route path="/product/:slug" element={<ProductScreen />} />
+            <Route path="/product/:slug/:num" element={<ProductScreen />} />
             <Route path="/" element={<HomeScreen />} />
           </Routes>
         </main>

@@ -4,7 +4,7 @@ import data from '../services/data'
 
 const HomeScreen = () => {
   return (
-    <div>
+    <>
       <h1>Featured Products</h1>
       <div className="products">
         {data.products.map((prod) => {
@@ -26,7 +26,7 @@ const HomeScreen = () => {
           )
         })}
       </div>
-    </div>
+    </>
   )
 }
 
