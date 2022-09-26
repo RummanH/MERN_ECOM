@@ -1,0 +1,20 @@
+{
+  "name": "ecom_mern",
+  "version": "1.0.0",
+  "description": "fully functional mern stack ecommerce application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-client": "npm install --prefix client",
+    "install-server": "npm install --prefix server",
+    "install": "npm run install-client && npm run install-server",
+    "client": "npm start --prefix client",
+    "server": "npm run watch --prefix server",
+    "watch": "concurrently \"npm run client\" \"npm run server\"",
+    "deploy": "npm run build --prefix client && npm start --prefix server",
+    "deploy-cluster": "npm run build --prefix client && npm run cluster --prefix server",
+    "deploy-watch": "npm run build --prefix client && npm run watch --prefix server"
+  },
+  "author": "Mohammad Rumman",
+  "license": "ISC"
+}
