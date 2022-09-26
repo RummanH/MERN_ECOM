@@ -13,6 +13,8 @@ const server = https.createServer(
   app
 )
 
+console.log('')
+
 const PORT = process.env.PORT || 5000
 ;(async () => {
   try {
