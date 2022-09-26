@@ -9,5 +9,8 @@
     "cluster": "pm2 start src/server.js -l logs.txt -i 0"
   },
   "author": "Mohammad Rumman",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }

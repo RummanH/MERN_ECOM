@@ -12,6 +12,8 @@ node_modules
 server/public
 
 # misc
+key.pem
+cert.pem
 .env
 .DS_Store
 .env.local
