@@ -1,9 +1,10 @@
-const { Router } = require('express')
-const { httpGetDummy } = require('./products.controller')
+const { Router } = require('express');
+const { httpGetDummy, httpGetOneProduct } = require('./products.controller');
 
-const router = Router()
+const router = Router();
 
 //NOT RESTful
-router.route('/dummy').get(httpGetDummy)
+router.route('/dummy').get(httpGetDummy);
+router.route('/slug/:slug').get(httpGetOneProduct);
 
-module.exports = router
+module.exports = router;

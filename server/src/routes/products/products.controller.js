@@ -1,12 +1,31 @@
-const { getDummyProducts } = require('../../models/products/products.model')
+const {
+  getDummyProducts,
+  getOneProduct,
+} = require('../../models/products/products.model');
 
-async function httpGetDummy(req, res, next) {
+function httpGetDummy(req, res, next) {
   res.status(200).json({
     status: 'success',
     data: {
       products: getDummyProducts(),
     },
-  })
+  });
 }
 
-module.exports = { httpGetDummy }
+function httpGetOneProduct(req, res, next) {
+  const product = getOneProduct(req.params.slug);
+  if (!product) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'No Product found!',
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product,
+    },
+  });
+}
+
+module.exports = { httpGetDummy, httpGetOneProduct };

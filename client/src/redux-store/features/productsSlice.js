@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import _ from 'lodash';
+import { getError } from '../../services/getError';
 
 const URL = 'https://localhost:5000';
 
 const initialState = {
-  loading: true,
+  loading: false,
   error: '',
   products: {},
 };
@@ -16,9 +17,21 @@ export const getAllProducts = createAsyncThunk(
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
       const { data } = await axios.get(`${URL}/api/v1/products/dummy`);
-      return data;
+      return data.data.products;
     } catch (err) {
-      return thunkAPI.rejectWithValue('wrong');
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const getOneProduct = createAsyncThunk(
+  'products/getOneProduct',
+  async ({ slug }, thunkAPI) => {
+    try {
+      const { data } = await axios.get(`${URL}/api/v1/products/slug/${slug}`);
+      return data.data.product;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
     }
   }
 );
@@ -34,16 +47,33 @@ const productsSlice = createSlice({
     },
 
     [getAllProducts.fulfilled]: (state, action) => {
-      const {
-        data: { products },
-      } = action.payload;
-
       state.loading = false;
       state.error = '';
-      state.products = { ...state.products, ..._.mapKeys(products, '_id') };
+      state.products = {
+        ...state.products,
+        ..._.mapKeys(action.payload, '_id'),
+      };
     },
 
     [getAllProducts.rejected]: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
+    [getOneProduct.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [getOneProduct.fulfilled]: (state, action) => {
+      state.error = '';
+      state.loading = false;
+      state.products = {
+        ...state.products,
+        [action.payload._id]: action.payload,
+      };
+    },
+
+    [getOneProduct.rejected]: (state, action) => {
       state.error = action.payload;
       state.loading = false;
     },
