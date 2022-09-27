@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import HomeScreen from './pages/HomeScreen'
-import ProductScreen from './pages/ProductScreen'
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import HomeScreen from './pages/HomeScreen';
+import ProductScreen from './pages/ProductScreen';
 
 function App() {
   return (
@@ -11,13 +12,13 @@ function App() {
         </header>
         <main>
           <Routes>
-            <Route path="/product/:slug/:num" element={<ProductScreen />} />
+            <Route path="/product/:slug" element={<ProductScreen />} />
             <Route path="/" element={<HomeScreen />} />
           </Routes>
         </main>
       </div>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
