@@ -1,6 +1,7 @@
 const {
   getDummyProducts,
   getOneProduct,
+  getOneProductById,
 } = require('../../models/products/products.model');
 
 function httpGetDummy(req, res, next) {
@@ -28,4 +29,19 @@ function httpGetOneProduct(req, res, next) {
   });
 }
 
-module.exports = { httpGetDummy, httpGetOneProduct };
+function httpGetOneProductById(req, res, next) {
+  const product = getOneProductById(req.params.id);
+  if (!product) {
+    return res
+      .status(404)
+      .json({ status: 'fail', message: 'Product not found' });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product,
+    },
+  });
+}
+
+module.exports = { httpGetDummy, httpGetOneProduct, httpGetOneProductById };

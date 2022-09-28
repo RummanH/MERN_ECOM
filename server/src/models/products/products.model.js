@@ -8,4 +8,8 @@ function getOneProduct(slug) {
   return products.find((product) => product.slug === slug);
 }
 
-module.exports = { getDummyProducts, getOneProduct };
+function getOneProductById(id) {
+  return products.find((product) => product._id === id);
+}
+
+module.exports = { getDummyProducts, getOneProduct, getOneProductById };

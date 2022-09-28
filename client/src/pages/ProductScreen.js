@@ -1,31 +1,49 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getOneProduct } from '../redux-store/features/productsSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import { LoadingBox, MessageBox, Rating } from '../components';
+import { getOneProduct } from '../redux-store/features/productsSlice';
+import { addItem } from '../redux-store/features/cartSlice';
+import axios from 'axios';
 
 const ProductScreen = () => {
-  const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const navigate = useNavigate();
   const params = useParams();
   const { slug } = params;
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+  const { cartItems } = useSelector((state) => state.cart);
   const product = Object.values(products).find(
     (product) => product.slug === slug
   );
 
   useEffect(() => {
-    console.log('hi');
     dispatch(getOneProduct({ slug }));
   }, [slug, dispatch]);
+
+  const addToCartHandler = async () => {
+    const existItem = cartItems.find((item) => item._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(
+      `https://localhost:5000/api/v1/products/${product._id}`
+    );
+    if (data.data.product.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch(addItem({ ...product, quantity }));
+    navigate('/cart');
+  };
+
   return loading ? (
     <LoadingBox />
   ) : error ? (
@@ -84,7 +102,9 @@ const ProductScreen = () => {
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <div className="d-grid">
-                        <Button variant="primary">Add to Cart</Button>
+                        <Button variant="primary" onClick={addToCartHandler}>
+                          Add to Cart
+                        </Button>
                       </div>
                     </ListGroup.Item>
                   )}
