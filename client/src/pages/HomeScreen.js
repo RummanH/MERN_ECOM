@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
+import React, { useEffect } from 'react';
 
+//Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+//own
 import { getAllProducts } from '../redux-store/features/productsSlice';
 import { LoadingBox, MessageBox, Product } from '../components';
 

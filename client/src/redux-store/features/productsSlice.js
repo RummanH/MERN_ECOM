@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getError } from '../../services/getError';
 import axios from 'axios';
 import _ from 'lodash';
-import { getError } from '../../services/getError';
 
 const URL = 'https://localhost:5000';
 

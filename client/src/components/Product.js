@@ -1,27 +1,38 @@
-import axios from 'axios';
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addItem } from '../redux-store/features/cartSlice';
+import axios from 'axios';
+import React from 'react';
+
+//Bootstrap
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+
+//own
+import { addItem, increase } from '../redux-store/features/cartSlice';
 import Rating from './Rating';
 
 const Product = ({ product }) => {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
 
-  const addToCartHandler = async () => {
+  const handleAddToCart = async () => {
     const existItem = cartItems.find((item) => item._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const quantity = existItem ? existItem.quantity : 0;
     const { data } = await axios.get(
       `https://localhost:5000/api/v1/products/${product._id}`
     );
-    if (data.data.product.countInStock < quantity) {
+
+    //can use any value if not 1
+    if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;
     }
-    dispatch(addItem({ ...product, quantity }));
+
+    if (existItem) {
+      dispatch(increase({ ...product, quantity: 1 }));
+    } else {
+      dispatch(addItem({ ...product, quantity: 1 }));
+    }
   };
 
   return (
@@ -39,7 +50,7 @@ const Product = ({ product }) => {
         {product.countInStock === 0 ? (
           <Button variant="light">Out of stock</Button>
         ) : (
-          <Button variant="primary" onClick={addToCartHandler}>
+          <Button variant="primary" onClick={handleAddToCart}>
             Add to Cart
           </Button>
         )}

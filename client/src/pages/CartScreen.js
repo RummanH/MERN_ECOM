@@ -1,45 +1,39 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { MessageBox } from '../components';
 import React from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { MessageBox } from '../components';
-import { Helmet } from 'react-helmet-async';
-import { useDispatch, useSelector } from 'react-redux';
 
-//Bootstrap Components
+//Bootstrap
+import ListGroup from 'react-bootstrap/esm/ListGroup';
+import Button from 'react-bootstrap/esm/Button';
+import Card from 'react-bootstrap/esm/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
-import Card from 'react-bootstrap/esm/Card';
-import Button from 'react-bootstrap/esm/Button';
-import ListGroup from 'react-bootstrap/esm/ListGroup';
 
+//own
 import {
   addItem,
   decrease,
+  increase,
   removeItem,
 } from '../redux-store/features/cartSlice';
 
 const CartScreen = () => {
-  const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const checkoutHandler = () => {
-    navigate('/signin?redirect=/shipping');
-  };
-
-  const handleRemoveItem = (id) => {
-    dispatch(removeItem(id));
-  };
+  const { cartItems } = useSelector((state) => state.cart);
 
   const handleIncrease = async (item, quantity) => {
     const { data } = await axios.get(
       `https://localhost:5000/api/v1/products/${item._id}`
     );
-    if (data.data.product.countInStock < quantity) {
+    if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;
     }
-    dispatch(addItem({ ...item, quantity }));
+    dispatch(increase({ ...item, quantity: 1 }));
   };
 
   const handleDecrease = (id, quantity) => {
@@ -49,6 +43,15 @@ const CartScreen = () => {
       dispatch(decrease(id));
     }
   };
+
+  const handleRemove = (id) => {
+    dispatch(removeItem(id));
+  };
+
+  const handleCheckout = () => {
+    navigate('/signin?redirect=/shipping');
+  };
+
   return (
     <div>
       <Helmet>
@@ -85,7 +88,7 @@ const CartScreen = () => {
                       <Button
                         variant="light"
                         // disabled={item.quantity === item.countInStock}
-                        onClick={() => handleIncrease(item, item.quantity + 1)}
+                        onClick={() => handleIncrease(item, item.quantity)}
                       >
                         <i className="fas fa-plus-circle" />
                       </Button>{' '}
@@ -94,7 +97,7 @@ const CartScreen = () => {
                     <Col md={2}>
                       <Button
                         variant="light"
-                        onClick={() => handleRemoveItem(item._id)}
+                        onClick={() => handleRemove(item._id)}
                       >
                         <i className="fas fa-trash" />
                       </Button>
@@ -122,7 +125,7 @@ const CartScreen = () => {
                       type="button"
                       variant="primary"
                       disabled={cartItems.length === 0}
-                      onClick={checkoutHandler}
+                      onClick={handleCheckout}
                     >
                       Proceed to checkout
                     </Button>

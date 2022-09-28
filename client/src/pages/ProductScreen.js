@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet-async';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
+//Bootstrap
+import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
+import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Card from 'react-bootstrap/Card';
-import Badge from 'react-bootstrap/Badge';
-import Button from 'react-bootstrap/Button';
-import ListGroup from 'react-bootstrap/ListGroup';
 
-import { LoadingBox, MessageBox, Rating } from '../components';
+//own
 import { getOneProduct } from '../redux-store/features/productsSlice';
-import { addItem } from '../redux-store/features/cartSlice';
-import axios from 'axios';
+import { addItem, increase } from '../redux-store/features/cartSlice';
+import { LoadingBox, MessageBox, Rating } from '../components';
 
 const ProductScreen = () => {
   const navigate = useNavigate();
@@ -30,17 +32,23 @@ const ProductScreen = () => {
     dispatch(getOneProduct({ slug }));
   }, [slug, dispatch]);
 
-  const addToCartHandler = async () => {
+  const handleAddToCart = async () => {
     const existItem = cartItems.find((item) => item._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const quantity = existItem ? existItem.quantity : 0;
     const { data } = await axios.get(
       `https://localhost:5000/api/v1/products/${product._id}`
     );
-    if (data.data.product.countInStock < quantity) {
+
+    //can use any value if not 1
+    if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;
     }
-    dispatch(addItem({ ...product, quantity }));
+    if (existItem) {
+      dispatch(increase({ ...product, quantity: 1 }));
+    } else {
+      dispatch(addItem({ ...product, quantity: 1 }));
+    }
     navigate('/cart');
   };
 
@@ -102,7 +110,7 @@ const ProductScreen = () => {
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <div className="d-grid">
-                        <Button variant="primary" onClick={addToCartHandler}>
+                        <Button variant="primary" onClick={handleAddToCart}>
                           Add to Cart
                         </Button>
                       </div>
