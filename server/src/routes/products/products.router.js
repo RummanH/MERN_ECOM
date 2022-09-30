@@ -1,18 +1,19 @@
 const { Router } = require('express');
+
+const catchAsync = require('../../services/catchAsync');
 const {
-  httpGetDummy,
-  httpGetOneProduct,
+  httpGetAllProducts,
+  httpGetOneProductBySlug,
   httpGetOneProductById,
 } = require('./products.controller');
 
 const router = Router();
 
 //NOT RESTful
-router.route('/dummy').get(httpGetDummy);
-router.route('/slug/:slug').get(httpGetOneProduct);
+router.route('/slug/:slug').get(catchAsync(httpGetOneProductBySlug));
 
 //RESTful
-
-router.route('/:id').get(httpGetOneProductById);
+router.route('/').get(catchAsync(httpGetAllProducts));
+router.route('/:id').get(catchAsync(httpGetOneProductById));
 
 module.exports = router;

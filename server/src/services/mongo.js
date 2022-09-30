@@ -1,4 +1,12 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 const mongoose = require('mongoose');
+
+let CONNECTION_URL = process.env.DEVELOPMENT_DATABASE;
+//use different database for production
+if (process.env.NODE_ENV === 'production') {
+  CONNECTION_URL = process.env.PRODUCTION_DATABASE;
+}
 
 mongoose.connection.on('error', (error) => {
   console.log('There was an error connecting to the database!');
@@ -12,6 +20,6 @@ mongoose.connection.once('open', () => {
 });
 
 async function mongoConnect() {
-  await mongoose.connect(process.env.MONGO_URL);
+  await mongoose.connect(CONNECTION_URL);
 }
 module.exports = { mongoConnect };

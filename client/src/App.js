@@ -1,4 +1,9 @@
-import { ProductScreen, HomeScreen, CartScreen } from './pages/index';
+import {
+  ProductScreen,
+  HomeScreen,
+  CartScreen,
+  SigninScreen,
+} from './pages/index';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -39,6 +44,7 @@ function App() {
             <Routes>
               <Route path="/product/:slug" element={<ProductScreen />} />
               <Route path="/cart" element={<CartScreen />} />
+              <Route path="/signin" element={<SigninScreen />} />
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>

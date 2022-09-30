@@ -1,8 +1,15 @@
-const express = require('express')
-const productRouter = require('./products/products.router')
+const express = require('express');
+const AppError = require('../services/AppError');
+const productRouter = require('./products/products.router');
+const userRouter = require('./users/users.router');
 
-const router = express.Router()
+const router = express.Router();
 
-router.use('/products', productRouter)
+router.use('/products', productRouter);
+router.use('/users', userRouter);
 
-module.exports = router
+router.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+module.exports = router;

@@ -16,7 +16,7 @@ export const getAllProducts = createAsyncThunk(
   async (param, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await axios.get(`${URL}/api/v1/products/dummy`);
+      const { data } = await axios.get(`${URL}/api/v1/products`);
       return data.data.products;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));

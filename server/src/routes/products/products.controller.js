@@ -1,25 +1,13 @@
 const {
-  getDummyProducts,
   getOneProduct,
-  getOneProductById,
+  getAllProducts,
 } = require('../../models/products/products.model');
+const AppError = require('../../services/AppError');
 
-function httpGetDummy(req, res, next) {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      products: getDummyProducts(),
-    },
-  });
-}
-
-function httpGetOneProduct(req, res, next) {
-  const product = getOneProduct(req.params.slug);
+async function httpGetOneProductBySlug(req, res, next) {
+  const product = await getOneProduct({ slug: req.params.slug });
   if (!product) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'No Product found!',
-    });
+    return next(new AppError('No product found!', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -29,19 +17,28 @@ function httpGetOneProduct(req, res, next) {
   });
 }
 
-function httpGetOneProductById(req, res, next) {
-  const product = getOneProductById(req.params.id);
+async function httpGetOneProductById(req, res, next) {
+  const product = await getOneProduct({ _id: req.params.id });
   if (!product) {
-    return res
-      .status(404)
-      .json({ status: 'fail', message: 'Product not found' });
+    return next(new AppError('No product found!', 404));
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      product,
-    },
+    data: { product },
   });
 }
 
-module.exports = { httpGetDummy, httpGetOneProduct, httpGetOneProductById };
+async function httpGetAllProducts(req, res, next) {
+  const products = await getAllProducts();
+  return res.status(200).json({
+    status: 'success',
+    results: products.length,
+    data: { products },
+  });
+}
+
+module.exports = {
+  httpGetOneProductBySlug,
+  httpGetOneProductById,
+  httpGetAllProducts,
+};

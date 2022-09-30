@@ -1,15 +1,17 @@
-const { products } = require('../../services/data');
+const products = require('./products.mongo');
 
-function getDummyProducts() {
-  return products;
+async function getAllProducts() {
+  return await products.find();
 }
 
-function getOneProduct(slug) {
-  return products.find((product) => product.slug === slug);
+async function getOneProduct({ _id, slug }) {
+  let filter = {};
+  if (slug) {
+    filter = { slug };
+  } else {
+    filter = { _id };
+  }
+  return await products.findOne(filter);
 }
 
-function getOneProductById(id) {
-  return products.find((product) => product._id === id);
-}
-
-module.exports = { getDummyProducts, getOneProduct, getOneProductById };
+module.exports = { getAllProducts, getOneProduct };

@@ -26,6 +26,7 @@ const CartScreen = () => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const handleIncrease = async (item, quantity) => {
+    console.log(item);
     const { data } = await axios.get(
       `https://localhost:5000/api/v1/products/${item._id}`
     );
