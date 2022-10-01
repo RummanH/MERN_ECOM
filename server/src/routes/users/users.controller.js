@@ -2,10 +2,8 @@ const AppError = require('../../services/AppError');
 
 const {
   saveUser,
-  getOneUserById,
+  getOneUser,
   getAllUser,
-  getOneUserByEmail,
-  updateMe,
 } = require('../../models/users/users.model');
 
 function sendCookie(token, res) {
@@ -20,16 +18,16 @@ function sendCookie(token, res) {
   res.cookie('token', token, cookieOptions);
 }
 
-function bodyFilter(candidateObj, ...allowed) {
-  const filtered = {};
-  Object.keys(candidateObj).forEach((el) => {
-    if (allowed.includes(el)) {
-      filtered[el] = candidateObj[el];
-    }
-  });
+// function bodyFilter(candidateObj, ...allowed) {
+//   const filtered = {};
+//   Object.keys(candidateObj).forEach((el) => {
+//     if (allowed.includes(el)) {
+//       filtered[el] = candidateObj[el];
+//     }
+//   });
 
-  return filtered;
-}
+//   return filtered;
+// }
 
 async function httpSignupUser(req, res, next) {
   const { name, email, password, passwordConfirm } = req.body;
@@ -37,7 +35,7 @@ async function httpSignupUser(req, res, next) {
     return next(new AppError('Please provide all values!', 400));
   }
 
-  if (await getOneUserByEmail(email)) {
+  if (await getOneUser({ email })) {
     return next(new AppError('User already exist!', 400));
   }
 
@@ -58,11 +56,12 @@ async function httpSignupUser(req, res, next) {
 
 async function httpLoginUser(req, res, next) {
   const { email, password } = req.body;
+  console.log(email, password);
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }
 
-  const user = await getOneUserByEmail(email);
+  const user = await getOneUser({ email });
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
@@ -80,40 +79,40 @@ async function httpLoginUser(req, res, next) {
   });
 }
 
-async function httpUpdateMe(req, res, next) {
-  const { name, lastName, email, location, password, passwordConfirm } =
-    req.body;
+// async function httpUpdateMe(req, res, next) {
+//   const { name, lastName, email, location, password, passwordConfirm } =
+//     req.body;
 
-  if (password || passwordConfirm) {
-    return next(
-      new AppError(
-        'This route is not for password update. please use /updateMyPassword',
-        400
-      )
-    );
-  }
+//   if (password || passwordConfirm) {
+//     return next(
+//       new AppError(
+//         'This route is not for password update. please use /updateMyPassword',
+//         400
+//       )
+//     );
+//   }
 
-  if (!name || !lastName || !email || !location) {
-    return next(new AppError('Please provide all the values!', 400));
-  }
+//   if (!name || !lastName || !email || !location) {
+//     return next(new AppError('Please provide all the values!', 400));
+//   }
 
-  const filteredBody = bodyFilter(
-    req.body,
-    'name',
-    'lastName',
-    'email',
-    'location'
-  );
+//   const filteredBody = bodyFilter(
+//     req.body,
+//     'name',
+//     'lastName',
+//     'email',
+//     'location'
+//   );
 
-  const updatedMe = await updateMe(req.user.id, filteredBody);
+//   const updatedMe = await updateMe(req.user.id, filteredBody);
 
-  return res.status(200).json({
-    status: 'success',
-    data: {
-      user: updatedMe,
-    },
-  });
-}
+//   return res.status(200).json({
+//     status: 'success',
+//     data: {
+//       user: updatedMe,
+//     },
+//   });
+// }
 
 async function httpGetAllUsers(req, res, next) {
   const users = await getAllUser();
@@ -126,7 +125,7 @@ async function httpGetAllUsers(req, res, next) {
 }
 
 async function httpGetOneUser(req, res, next) {
-  const user = await getOneUserById(req.params.id, next);
+  const user = await getOneUser({ _id: req.params.id });
 
   if (!user) {
     return next(new AppError('No user found!', 404));
@@ -153,5 +152,4 @@ module.exports = {
   httpUpdateUser,
   httpGetOneUser,
   httpGetAllUsers,
-  httpUpdateMe,
 };

@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
 const AppError = require('../../services/AppError');
-const { getOneUserById } = require('../../models/users/users.model');
+const { getOneUser } = require('../../models/users/users.model');
 
 async function httpProtect(req, res, next) {
   let token;
@@ -23,7 +23,7 @@ async function httpProtect(req, res, next) {
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const currentUser = await getOneUserById(decoded.id);
+  const currentUser = await getOneUser({ _id: decoded.id });
   if (!currentUser) {
     return next(
       new AppError('Token user belong to this token does no longer exist!', 401)
@@ -43,7 +43,6 @@ async function httpProtect(req, res, next) {
 
 function httpRestrictTo(...roles) {
   return (req, res, next) => {
-    console.log(req.user);
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
@@ -64,7 +63,7 @@ async function httpUpdatePassword(req, res, next) {
     );
   }
 
-  const user = await getOneUserById(req.user.id);
+  const user = await getOneUser({ _id: req.user.id });
 
   if (!(await user.correctPassword(currentPassword, user.password))) {
     return next(new AppError('Incorrect current password!', 401));

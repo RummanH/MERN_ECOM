@@ -4,7 +4,7 @@ const catchAsync = require('../../services/catchAsync');
 const {
   httpGetAllProducts,
   httpGetOneProductBySlug,
-  httpGetOneProductById,
+  httpGetOneProduct,
 } = require('./products.controller');
 
 const router = Router();
@@ -14,6 +14,6 @@ router.route('/slug/:slug').get(catchAsync(httpGetOneProductBySlug));
 
 //RESTful
 router.route('/').get(catchAsync(httpGetAllProducts));
-router.route('/:id').get(catchAsync(httpGetOneProductById));
+router.route('/:id').get(catchAsync(httpGetOneProduct));
 
 module.exports = router;

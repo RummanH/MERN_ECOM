@@ -28,6 +28,8 @@ const ProductScreen = () => {
     (product) => product.slug === slug
   );
 
+  console.log(product);
+
   useEffect(() => {
     dispatch(getOneProduct({ slug }));
   }, [slug, dispatch]);
@@ -35,11 +37,14 @@ const ProductScreen = () => {
   const handleAddToCart = async () => {
     const existItem = cartItems.find((item) => item._id === product._id);
     const quantity = existItem ? existItem.quantity : 0;
+
     const { data } = await axios.get(
       `https://localhost:5000/api/v1/products/${product._id}`
     );
 
     //can use any value if not 1
+
+    console.log(data.data.product);
     if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;

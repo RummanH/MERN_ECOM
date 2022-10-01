@@ -10,7 +10,6 @@ const {
 const {
   httpSignupUser,
   httpLoginUser,
-  httpUpdateMe,
   httpGetOneUser,
   httpGetAllUsers,
   httpUpdateUser,
@@ -24,7 +23,7 @@ router.post('/login', catchAsync(httpLoginUser));
 
 // from this point all protected
 router.use(catchAsync(httpProtect));
-router.patch('/updateMe', catchAsync(httpUpdateMe));
+// router.patch('/updateMe', catchAsync(httpUpdateMe));
 router.patch('/updateMyPassword', catchAsync(httpUpdatePassword));
 
 //Authorized to admin

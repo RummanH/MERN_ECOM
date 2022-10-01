@@ -17,8 +17,10 @@ async function httpGetOneProductBySlug(req, res, next) {
   });
 }
 
-async function httpGetOneProductById(req, res, next) {
+async function httpGetOneProduct(req, res, next) {
+  console.log(req.params.id);
   const product = await getOneProduct({ _id: req.params.id });
+  console.log(product);
   if (!product) {
     return next(new AppError('No product found!', 404));
   }
@@ -39,6 +41,6 @@ async function httpGetAllProducts(req, res, next) {
 
 module.exports = {
   httpGetOneProductBySlug,
-  httpGetOneProductById,
+  httpGetOneProduct,
   httpGetAllProducts,
 };

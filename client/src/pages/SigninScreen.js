@@ -1,28 +1,48 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 
 //Bootstrap
 import Container from 'react-bootstrap/esm/Container';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+import { loginUser } from '../redux-store/features/userSlice';
+import { toast } from 'react-toastify';
 
 const initialValue = { email: '', password: '' };
 
 const SigninScreen = () => {
-  const [value, setValue] = useState(initialValue);
+  const [values, setValue] = useState(initialValue);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   //here I am getting redirect value from query
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
 
+  const { user } = useSelector((state) => state.user);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!values.email || !values.password) {
+      toast.error('Please provide email and password!');
+      return;
+    }
+    dispatch(loginUser(values));
   };
 
   const handleChange = (e) => {
-    setValue({ ...value, [e.target.name]: e.target.value });
+    setValue({ ...values, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate(redirect || '/');
+    }
+  }, [user, navigate, redirect]);
 
   return (
     <Container className="small-container">
@@ -38,7 +58,7 @@ const SigninScreen = () => {
             required
             name="email"
             onChange={handleChange}
-            value={value.email}
+            value={values.email}
           />
         </Form.Group>
 
@@ -49,7 +69,7 @@ const SigninScreen = () => {
             required
             name="password"
             onChange={handleChange}
-            value={value.password}
+            value={values.password}
           />
         </Form.Group>
 
