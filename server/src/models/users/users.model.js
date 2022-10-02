@@ -24,10 +24,10 @@ async function saveUser(user) {
 //   });
 // }
 
-async function getOneUser({ id, email }) {
+async function getOneUser({ _id, email }) {
   let filter = {};
-  if (id) {
-    filter = { id };
+  if (_id) {
+    filter = { _id };
   }
   if (email) {
     filter = { email };

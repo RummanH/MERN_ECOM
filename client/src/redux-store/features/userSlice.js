@@ -6,7 +6,7 @@ import { getError } from '../../services/getError';
 import {
   removeToLocalStorage,
   setToLocalStorage,
-} from '../../services/localStorage_browser';
+} from '../../services/localStorage_brower';
 
 const initialState = {
   user: localStorage.getItem('user')
@@ -24,7 +24,7 @@ export const signupUser = createAsyncThunk(
   async (currentUser, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         `${URL}/api/v1/users/signup`,
         currentUser
       );
@@ -72,6 +72,22 @@ const userSlice = createSlice({
       state.loading = true;
     },
 
+    [signupUser.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.user = payload.user;
+      state.token = payload.token;
+      setToLocalStorage('user', JSON.stringify(state.user));
+      setToLocalStorage('token', state.token);
+      state.error = '';
+      toast.success('Successfully created account.');
+    },
+
+    [signupUser.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      toast.error(payload);
+    },
+
     [loginUser.pending]: (state) => {
       state.loading = true;
     },
@@ -83,6 +99,7 @@ const userSlice = createSlice({
       state.error = '';
       setToLocalStorage('user', JSON.stringify(state.user));
       setToLocalStorage('token', state.token);
+      toast.success('Successfully login.');
     },
 
     [loginUser.rejected]: (state, { payload }) => {

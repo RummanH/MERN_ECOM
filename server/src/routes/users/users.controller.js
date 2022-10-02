@@ -36,7 +36,7 @@ async function httpSignupUser(req, res, next) {
   }
 
   if (await getOneUser({ email })) {
-    return next(new AppError('User already exist!', 400));
+    return next(new AppError('User with this email already exist!', 400));
   }
 
   const user = await saveUser({ name, email, password, passwordConfirm });
@@ -56,7 +56,6 @@ async function httpSignupUser(req, res, next) {
 
 async function httpLoginUser(req, res, next) {
   const { email, password } = req.body;
-  console.log(email, password);
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }

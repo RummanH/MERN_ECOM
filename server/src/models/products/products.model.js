@@ -1,7 +1,7 @@
 const products = require('./products.mongo');
 
 async function getAllProducts() {
-  return await products.find();
+  return await products.find({}, { __v: 0 });
 }
 
 async function getOneProduct({ _id, slug }) {

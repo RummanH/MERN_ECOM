@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   removeToLocalStorage,
   setToLocalStorage,
-} from '../../services/localStorage_browser';
+} from '../../services/localStorage_brower';
 
 const initialState = {
   cartItems: localStorage.getItem('cart')
@@ -11,6 +11,13 @@ const initialState = {
     : [],
   totalPrice: 0,
   numberOfProducts: 0,
+  shippingAddress: localStorage.getItem('shippingAddress')
+    ? JSON.parse(localStorage.getItem('shippingAddress'))
+    : {},
+  paymentMethod:
+    localStorage.getItem('paymentMethod') ||
+    localStorage.getItem('paymentMethod') ||
+    '',
 };
 
 const cartSlice = createSlice({
@@ -58,6 +65,29 @@ const cartSlice = createSlice({
       state.numberOfProducts = amount;
       state.totalPrice = total;
     },
+
+    addShippingAddress: (state, { payload }) => {
+      state.shippingAddress = payload;
+      setToLocalStorage(
+        'shippingAddress',
+        JSON.stringify(state.shippingAddress)
+      );
+    },
+
+    clearShippingAddress: (state) => {
+      state.shippingAddress = {};
+      removeToLocalStorage('shippingAddress');
+    },
+
+    savePaymentMethod: (state, { payload }) => {
+      state.paymentMethod = payload;
+      setToLocalStorage('paymentMethod', payload);
+    },
+
+    clearPaymentMethod: (state) => {
+      state.paymentMethod = '';
+      removeToLocalStorage('paymentMethod');
+    },
   },
 });
 
@@ -68,5 +98,9 @@ export const {
   increase,
   clearCart,
   calculateTotal,
+  addShippingAddress,
+  clearShippingAddress,
+  savePaymentMethod,
+  clearPaymentMethod,
 } = cartSlice.actions;
 export default cartSlice.reducer;

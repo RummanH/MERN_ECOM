@@ -14,7 +14,6 @@ import Row from 'react-bootstrap/esm/Row';
 
 //own
 import {
-  addItem,
   decrease,
   increase,
   removeItem,

@@ -3,6 +3,10 @@ import {
   HomeScreen,
   CartScreen,
   SigninScreen,
+  ShippingAddressScreen,
+  SignUpScreen,
+  PaymentMethodScreen,
+  PlaceOrderScreen,
 } from './pages/index';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,9 +22,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/esm/Nav';
 import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import { signoutUser } from './redux-store/features/userSlice';
-import { clearCart } from './redux-store/features/cartSlice';
+import {
+  clearCart,
+  clearPaymentMethod,
+  clearShippingAddress,
+} from './redux-store/features/cartSlice';
 
 function App() {
+  // const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -28,6 +37,9 @@ function App() {
   const handleSignout = () => {
     dispatch(signoutUser());
     dispatch(clearCart());
+    dispatch(clearShippingAddress());
+    dispatch(clearPaymentMethod());
+    // navigate('/');
   };
   return (
     <BrowserRouter>
@@ -81,6 +93,10 @@ function App() {
               <Route path="/product/:slug" element={<ProductScreen />} />
               <Route path="/cart" element={<CartScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
+              <Route path="/signup" element={<SignUpScreen />} />
+              <Route path="/shipping" element={<ShippingAddressScreen />} />
+              <Route path="/payment" element={<PaymentMethodScreen />} />
+              <Route path="/placeorder" element={<PlaceOrderScreen />} />
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
