@@ -1,9 +1,9 @@
-const express = require('express');
+const { Router } = require('express');
 const AppError = require('../services/AppError');
 const productRouter = require('./products/products.router');
 const userRouter = require('./users/users.router');
 
-const router = express.Router();
+const router = Router();
 
 router.use('/products', productRouter);
 router.use('/users', userRouter);

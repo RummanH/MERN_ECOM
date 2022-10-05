@@ -2,8 +2,8 @@ const { Router } = require('express');
 
 const catchAsync = require('../../services/catchAsync');
 const {
-  httpGetAllProducts,
   httpGetOneProductBySlug,
+  httpGetAllProducts,
   httpGetOneProduct,
 } = require('./products.controller');
 

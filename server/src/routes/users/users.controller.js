@@ -1,8 +1,9 @@
 const AppError = require('../../services/AppError');
 
 const {
-  saveUser,
   getOneUser,
+  saveUser,
+  updateUser,
   getAllUser,
 } = require('../../models/users/users.model');
 
@@ -18,16 +19,16 @@ function sendCookie(token, res) {
   res.cookie('token', token, cookieOptions);
 }
 
-// function bodyFilter(candidateObj, ...allowed) {
-//   const filtered = {};
-//   Object.keys(candidateObj).forEach((el) => {
-//     if (allowed.includes(el)) {
-//       filtered[el] = candidateObj[el];
-//     }
-//   });
+function bodyFilter(candidateObj, ...allowed) {
+  const filtered = {};
+  Object.keys(candidateObj).forEach((el) => {
+    if (allowed.includes(el)) {
+      filtered[el] = candidateObj[el];
+    }
+  });
 
-//   return filtered;
-// }
+  return filtered;
+}
 
 async function httpSignupUser(req, res, next) {
   const { name, email, password, passwordConfirm } = req.body;
@@ -65,6 +66,10 @@ async function httpLoginUser(req, res, next) {
     return next(new AppError('Incorrect email or password', 401));
   }
 
+  if (!user.isActive) {
+    await updateUser(user._id, { isActive: true });
+  }
+
   const token = await user.createJWT();
   sendCookie(token, res);
 
@@ -78,41 +83,38 @@ async function httpLoginUser(req, res, next) {
   });
 }
 
-// async function httpUpdateMe(req, res, next) {
-//   const { name, lastName, email, location, password, passwordConfirm } =
-//     req.body;
+async function httpUpdateMe(req, res, next) {
+  const { password, passwordConfirm } = req.body;
 
-//   if (password || passwordConfirm) {
-//     return next(
-//       new AppError(
-//         'This route is not for password update. please use /updateMyPassword',
-//         400
-//       )
-//     );
-//   }
+  if (password || passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password update. please use /updateMyPassword',
+        400
+      )
+    );
+  }
 
-//   if (!name || !lastName || !email || !location) {
-//     return next(new AppError('Please provide all the values!', 400));
-//   }
+  const filteredBody = bodyFilter(req.body, 'name', 'email');
+  const updatedMe = await updateUser(req.user._id, filteredBody);
 
-//   const filteredBody = bodyFilter(
-//     req.body,
-//     'name',
-//     'lastName',
-//     'email',
-//     'location'
-//   );
+  return res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedMe,
+    },
+  });
+}
 
-//   const updatedMe = await updateMe(req.user.id, filteredBody);
+async function httpDeleteMe(req, res, next) {
+  await updateUser(req.user._id, { isActive: false });
+  return res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+}
 
-//   return res.status(200).json({
-//     status: 'success',
-//     data: {
-//       user: updatedMe,
-//     },
-//   });
-// }
-
+//these are restful only for administrations
 async function httpGetAllUsers(req, res, next) {
   const users = await getAllUser();
   return res.status(200).json({
@@ -148,6 +150,8 @@ async function httpUpdateUser(req, res, next) {
 module.exports = {
   httpSignupUser,
   httpLoginUser,
+  httpUpdateMe,
+  httpDeleteMe,
   httpUpdateUser,
   httpGetOneUser,
   httpGetAllUsers,

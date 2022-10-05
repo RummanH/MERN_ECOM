@@ -4,14 +4,16 @@ const catchAsync = require('../../services/catchAsync');
 const {
   httpProtect,
   httpRestrictTo,
-  httpUpdatePassword,
+  httpUpdateMyPassword,
 } = require('./auth.controller');
 
 const {
   httpSignupUser,
   httpLoginUser,
-  httpGetOneUser,
+  httpUpdateMe,
+  httpDeleteMe,
   httpGetAllUsers,
+  httpGetOneUser,
   httpUpdateUser,
 } = require('./users.controller');
 
@@ -21,15 +23,16 @@ const router = Router();
 router.post('/signup', catchAsync(httpSignupUser));
 router.post('/login', catchAsync(httpLoginUser));
 
-// from this point all protected
+//From this point all protected routes
 router.use(catchAsync(httpProtect));
-// router.patch('/updateMe', catchAsync(httpUpdateMe));
-router.patch('/updateMyPassword', catchAsync(httpUpdatePassword));
+router.patch('/updateMyPassword', catchAsync(httpUpdateMyPassword));
+router.patch('/updateMe', catchAsync(httpUpdateMe));
+router.delete('/deleteMe', catchAsync(httpDeleteMe));
 
-//Authorized to admin
+//From this point all Authorized routes
 router.use(httpRestrictTo('admin'));
 
-//restFul
+//RESTFul
 router.route('/').get(catchAsync(httpGetAllUsers));
 router
   .route('/:id')

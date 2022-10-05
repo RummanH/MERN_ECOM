@@ -52,7 +52,7 @@ function httpRestrictTo(...roles) {
   };
 }
 
-async function httpUpdatePassword(req, res, next) {
+async function httpUpdateMyPassword(req, res, next) {
   const { currentPassword, password, passwordConfirm } = req.body;
   if (!currentPassword) {
     return next(new AppError('Current password is empty!', 400));
@@ -82,4 +82,4 @@ async function httpUpdatePassword(req, res, next) {
   });
 }
 
-module.exports = { httpProtect, httpRestrictTo, httpUpdatePassword };
+module.exports = { httpProtect, httpRestrictTo, httpUpdateMyPassword };
