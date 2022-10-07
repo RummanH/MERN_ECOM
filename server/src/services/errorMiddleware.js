@@ -8,8 +8,9 @@ function sendErrorDev(err, res) {
     stack: err.stack,
   });
 }
+
 function sendErrorProd(err, res) {
-  //operation error that we trust
+  //operation error that I CREATED
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       status: err.status,

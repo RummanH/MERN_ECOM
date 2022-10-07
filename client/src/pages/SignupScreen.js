@@ -1,14 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { toast } from 'react-toastify';
 
 //Bootstrap
 import Container from 'react-bootstrap/esm/Container';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+
 import { signupUser } from '../redux-store/features/userSlice';
-import { toast } from 'react-toastify';
 
 const initialValue = { name: '', email: '', password: '', passwordConfirm: '' };
 
@@ -17,7 +18,7 @@ const SignUpScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //here I am getting redirect value from query
+  //How to get params value
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';

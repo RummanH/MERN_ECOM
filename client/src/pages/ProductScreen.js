@@ -12,23 +12,23 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-//own
 import { getOneProduct } from '../redux-store/features/productsSlice';
 import { addItem, increase } from '../redux-store/features/cartSlice';
 import { LoadingBox, MessageBox, Rating } from '../components';
 
 const ProductScreen = () => {
   const navigate = useNavigate();
+
+  //How to get value from params
   const params = useParams();
   const { slug } = params;
+
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
   const { cartItems } = useSelector((state) => state.cart);
   const product = Object.values(products).find(
     (product) => product.slug === slug
   );
-
-  console.log(product);
 
   useEffect(() => {
     dispatch(getOneProduct({ slug }));
@@ -43,8 +43,6 @@ const ProductScreen = () => {
     );
 
     //can use any value if not 1
-
-    console.log(data.data.product);
     if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;

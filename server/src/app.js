@@ -6,7 +6,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-google-oauth20');
 const cookieSession = require('cookie-session');
 
-const globalErrorHandler = require('./services/errorHandler');
+const errorMiddleware = require('./services/errorMiddleware');
 const apiV1Router = require('./routes/api_v1');
 
 const authOptions = {
@@ -71,6 +71,6 @@ app.use('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
-app.use(globalErrorHandler);
+app.use(errorMiddleware);
 
 module.exports = app;

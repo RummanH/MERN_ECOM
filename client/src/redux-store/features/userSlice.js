@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+
 import { getError } from '../../services/getError';
 
 import {
@@ -73,13 +74,13 @@ const userSlice = createSlice({
     },
 
     [signupUser.fulfilled]: (state, { payload }) => {
+      toast.success('Successfully created account.');
       state.loading = false;
+      state.error = '';
       state.user = payload.user;
       state.token = payload.token;
       setToLocalStorage('user', JSON.stringify(state.user));
       setToLocalStorage('token', state.token);
-      state.error = '';
-      toast.success('Successfully created account.');
     },
 
     [signupUser.rejected]: (state, { payload }) => {
@@ -93,13 +94,13 @@ const userSlice = createSlice({
     },
 
     [loginUser.fulfilled]: (state, { payload }) => {
+      toast.success('Successfully login.');
       state.loading = false;
       state.user = payload.user;
       state.token = payload.token;
       state.error = '';
       setToLocalStorage('user', JSON.stringify(state.user));
       setToLocalStorage('token', state.token);
-      toast.success('Successfully login.');
     },
 
     [loginUser.rejected]: (state, { payload }) => {

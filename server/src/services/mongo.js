@@ -8,15 +8,15 @@ if (process.env.NODE_ENV === 'production') {
   CONNECTION_URL = process.env.PRODUCTION_DATABASE;
 }
 
-mongoose.connection.on('error', (error) => {
-  console.log('There was an error connecting to the database!');
-  console.log(error);
-});
-
 mongoose.connection.once('open', () => {
   console.log(
     `Successfully connected to the ${process.env.NODE_ENV} Database!`
   );
+});
+
+mongoose.connection.on('error', (error) => {
+  console.log('There was an error connecting to the database!');
+  console.log(error);
 });
 
 async function mongoConnect() {

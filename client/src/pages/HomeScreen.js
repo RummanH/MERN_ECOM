@@ -6,7 +6,6 @@ import React, { useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-//own
 import { getAllProducts } from '../redux-store/features/productsSlice';
 import { LoadingBox, MessageBox, Product } from '../components';
 

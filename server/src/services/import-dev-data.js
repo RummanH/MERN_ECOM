@@ -1,6 +1,6 @@
 const products = require('../models/products/products.mongo');
 const { mongoConnect } = require('./mongo');
-const data = require('./data');
+const data = require('../../data/data');
 
 (async () => {
   await mongoConnect();

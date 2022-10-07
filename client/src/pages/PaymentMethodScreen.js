@@ -1,12 +1,13 @@
+import { savePaymentMethod } from '../redux-store/features/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import CheckoutSteps from '../components/CheckoutSteps';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { savePaymentMethod } from '../redux-store/features/cartSlice';
+
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const PaymentMethodScreen = () => {
   const dispatch = useDispatch();

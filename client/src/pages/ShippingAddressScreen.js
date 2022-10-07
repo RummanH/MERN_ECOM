@@ -1,15 +1,21 @@
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
+//Bootstrap Components
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { addShippingAddress } from '../redux-store/features/cartSlice';
-import { useNavigate } from 'react-router-dom';
 import { CheckoutSteps } from '../components';
 
 const ShippingAddressScreen = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { user } = useSelector((state) => state.user);
+
   const { shippingAddress } = useSelector((state) => state.cart);
   const [values, setValues] = useState({
     fullName: shippingAddress.fullName || '',
@@ -18,8 +24,6 @@ const ShippingAddressScreen = () => {
     postalCode: shippingAddress.postalCode || '',
     country: shippingAddress.country || '',
   });
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { fullName, address, city, postalCode, country } = values;
 
   const handleSubmit = (e) => {
@@ -27,7 +31,6 @@ const ShippingAddressScreen = () => {
     dispatch(
       addShippingAddress({ fullName, address, city, postalCode, country })
     );
-
     navigate('/payment');
   };
 

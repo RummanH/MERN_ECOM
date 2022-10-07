@@ -1,19 +1,19 @@
 import CartScreen from './CartScreen';
-import HomeScreen from './HomeScreen';
+import ShippingAddressScreen from './ShippingAddressScreen';
 import PaymentMethodScreen from './PaymentMethodScreen';
 import PlaceOrderScreen from './PlaceOrderScreen';
 import ProductScreen from './ProductScreen';
-import ShippingAddressScreen from './ShippingAddressScreen';
 import SigninScreen from './SigninScreen';
 import SignUpScreen from './SignupScreen';
+import HomeScreen from './HomeScreen';
 
 export {
-  HomeScreen,
-  ProductScreen,
-  CartScreen,
-  SigninScreen,
   ShippingAddressScreen,
-  SignUpScreen,
   PaymentMethodScreen,
   PlaceOrderScreen,
+  ProductScreen,
+  SignUpScreen,
+  SigninScreen,
+  HomeScreen,
+  CartScreen,
 };

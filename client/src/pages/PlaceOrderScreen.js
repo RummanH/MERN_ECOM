@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import CheckoutSteps from '../components/CheckoutSteps';
+import { Helmet } from 'react-helmet-async';
+import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
 
+import ListGroup from 'react-bootstrap/esm/ListGroup';
+import Button from 'react-bootstrap/esm/Button';
+import Card from 'react-bootstrap/esm/Card';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
-import Card from 'react-bootstrap/esm/Card';
-import Button from 'react-bootstrap/esm/Button';
-import ListGroup from 'react-bootstrap/esm/ListGroup';
-import { useSelector } from 'react-redux';
+
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const PlaceOrderScreen = () => {
+  const navigate = useNavigate();
+
   const { shippingAddress, paymentMethod, cartItems } = useSelector(
     (state) => state.cart
   );
@@ -20,12 +23,9 @@ const PlaceOrderScreen = () => {
   const itemsPrice = round2(
     cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
-
   const shippingPrice = itemsPrice > 100 ? round2(0) : round2(2.5);
   const taxPrice = round2(0.15 * itemsPrice);
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
-
-  const navigate = useNavigate();
 
   const handlePlaceOrder = () => {};
 

@@ -4,4 +4,4 @@ import MessageBox from './MessageBox';
 import Product from './Product';
 import Rating from './Rating';
 
-export { Product, Rating, LoadingBox, MessageBox, CheckoutSteps };
+export { CheckoutSteps, LoadingBox, MessageBox, Product, Rating };
