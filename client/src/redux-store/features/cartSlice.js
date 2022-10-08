@@ -66,7 +66,7 @@ const cartSlice = createSlice({
       state.totalPrice = total;
     },
 
-    addShippingAddress: (state, { payload }) => {
+    saveShippingAddress: (state, { payload }) => {
       state.shippingAddress = payload;
       setToLocalStorage(
         'shippingAddress',
@@ -98,7 +98,7 @@ export const {
   increase,
   clearCart,
   calculateTotal,
-  addShippingAddress,
+  saveShippingAddress,
   clearShippingAddress,
   savePaymentMethod,
   clearPaymentMethod,

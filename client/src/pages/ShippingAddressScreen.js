@@ -7,8 +7,8 @@ import { Helmet } from 'react-helmet-async';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { addShippingAddress } from '../redux-store/features/cartSlice';
-import { CheckoutSteps } from '../components';
+import { saveShippingAddress } from '../redux-store/features/cartSlice';
+import { CheckoutSteps, FormRow } from '../components';
 
 const ShippingAddressScreen = () => {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const ShippingAddressScreen = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      addShippingAddress({ fullName, address, city, postalCode, country })
+      saveShippingAddress({ fullName, address, city, postalCode, country })
     );
     navigate('/payment');
   };
@@ -53,55 +53,45 @@ const ShippingAddressScreen = () => {
       <div className="container small-container">
         <h1 className="my-3">Shipping Address</h1>
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="fullName">
-            <Form.Label>Full Name</Form.Label>
-            <Form.Control
-              value={fullName}
-              onChange={handleChange}
-              required
-              name="fullName"
-            />
-          </Form.Group>
+          <FormRow
+            controlId="fullName"
+            labelText="Full Name"
+            handleChange={handleChange}
+            name="fullName"
+            value={fullName}
+          />
 
-          <Form.Group className="mb-3" controlId="address">
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-              value={address}
-              onChange={handleChange}
-              required
-              name="address"
-            />
-          </Form.Group>
+          <FormRow
+            controlId="address "
+            labelText="Address"
+            handleChange={handleChange}
+            name="address"
+            value={address}
+          />
 
-          <Form.Group className="mb-3" controlId="city">
-            <Form.Label>City</Form.Label>
-            <Form.Control
-              value={city}
-              onChange={handleChange}
-              required
-              name="city"
-            />
-          </Form.Group>
+          <FormRow
+            controlId="city"
+            labelText="City"
+            handleChange={handleChange}
+            name="city"
+            value={city}
+          />
 
-          <Form.Group className="mb-3" controlId="postalCode">
-            <Form.Label>Postal Code</Form.Label>
-            <Form.Control
-              value={postalCode}
-              onChange={handleChange}
-              required
-              name="postalCode"
-            />
-          </Form.Group>
+          <FormRow
+            controlId="postalCode"
+            labelText="Postal Code"
+            handleChange={handleChange}
+            name="postalCode"
+            value={postalCode}
+          />
 
-          <Form.Group className="mb-3" controlId="country">
-            <Form.Label>Country</Form.Label>
-            <Form.Control
-              value={country}
-              onChange={handleChange}
-              required
-              name="country"
-            />
-          </Form.Group>
+          <FormRow
+            controlId="country"
+            labelText="Country"
+            handleChange={handleChange}
+            name="country"
+            value={country}
+          />
 
           <div className="mb-3">
             <Button variant="primary" type="submit">

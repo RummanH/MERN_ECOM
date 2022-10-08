@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 
 import { loginUser } from '../redux-store/features/userSlice';
+import { FormRow } from '../components';
 
 const initialValue = { email: '', password: '' };
 
@@ -56,27 +57,23 @@ const SigninScreen = () => {
       </Helmet>
       <h1 className="my-3">Sign In</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            name="email"
-            onChange={handleChange}
-            value={values.email}
-          />
-        </Form.Group>
+        <FormRow
+          controlId="email"
+          labelText="Email"
+          type="email"
+          name="email"
+          handleChange={handleChange}
+          value={values.email}
+        />
 
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            name="password"
-            onChange={handleChange}
-            value={values.password}
-          />
-        </Form.Group>
+        <FormRow
+          controlId="password"
+          labelText="Password"
+          type="password"
+          name="password"
+          handleChange={handleChange}
+          value={values.password}
+        />
 
         <div className="mb-3">
           <Button type="submit">Sign In</Button>
