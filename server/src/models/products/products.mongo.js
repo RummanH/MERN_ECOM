@@ -36,8 +36,8 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-//document middleware will run before any document being saved
-//only run before save and create command
+//Document middleware will run before any document being saved.
+//Only run before save and create command
 productSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lowercase: true });
   next();

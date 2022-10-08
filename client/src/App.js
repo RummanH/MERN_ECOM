@@ -1,3 +1,17 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
+
+//Bootstrap
+import { LinkContainer } from 'react-router-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Badge from 'react-bootstrap/esm/Badge';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/esm/Nav';
+import NavDropdown from 'react-bootstrap/esm/NavDropdown';
+
 import {
   ProductScreen,
   HomeScreen,
@@ -8,20 +22,8 @@ import {
   PaymentMethodScreen,
   PlaceOrderScreen,
 } from './pages/index';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-//Bootstrap
-import { LinkContainer } from 'react-router-bootstrap';
-import Container from 'react-bootstrap/Container';
-import Badge from 'react-bootstrap/esm/Badge';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/esm/Nav';
-import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import { signoutUser } from './redux-store/features/userSlice';
+
 import {
   clearCart,
   clearPaymentMethod,
@@ -29,17 +31,15 @@ import {
 } from './redux-store/features/cartSlice';
 
 function App() {
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
 
   const handleSignout = () => {
     dispatch(signoutUser());
     dispatch(clearCart());
     dispatch(clearShippingAddress());
     dispatch(clearPaymentMethod());
-    // navigate('/');
   };
   return (
     <BrowserRouter>
@@ -90,14 +90,14 @@ function App() {
         <main>
           <Container className="mt-3">
             <Routes>
+              <Route path="/signup" element={<SignUpScreen />} />
+              <Route path="/signin" element={<SigninScreen />} />
+              <Route path="/" element={<HomeScreen />} />
               <Route path="/product/:slug" element={<ProductScreen />} />
               <Route path="/cart" element={<CartScreen />} />
-              <Route path="/signin" element={<SigninScreen />} />
-              <Route path="/signup" element={<SignUpScreen />} />
               <Route path="/shipping" element={<ShippingAddressScreen />} />
               <Route path="/payment" element={<PaymentMethodScreen />} />
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
-              <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
         </main>

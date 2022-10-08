@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 
 import { signupUser } from '../redux-store/features/userSlice';
+import { FormRow } from '../components';
 
 const initialValue = { name: '', email: '', password: '', passwordConfirm: '' };
 
@@ -52,49 +53,37 @@ const SignUpScreen = () => {
       </Helmet>
       <h1 className="my-3">Signup</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="name"
-            required
-            name="name"
-            onChange={handleChange}
-            value={values.name}
-          />
-        </Form.Group>
+        <FormRow
+          name="name"
+          labelText="Name"
+          type="text"
+          handleChange={handleChange}
+          value={values.name}
+        />
 
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            name="email"
-            onChange={handleChange}
-            value={values.email}
-          />
-        </Form.Group>
+        <FormRow
+          name="email"
+          labelText="Email"
+          type="email"
+          handleChange={handleChange}
+          value={values.email}
+        />
 
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            name="password"
-            onChange={handleChange}
-            value={values.password}
-          />
-        </Form.Group>
+        <FormRow
+          name="password"
+          labelText="Password"
+          type="password"
+          handleChange={handleChange}
+          value={values.password}
+        />
 
-        <Form.Group className="mb-3" controlId="passwordConfirm">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            name="passwordConfirm"
-            onChange={handleChange}
-            value={values.passwordConfirm}
-          />
-        </Form.Group>
+        <FormRow
+          name="passwordConfirm"
+          labelText="Confirm Password"
+          type="password"
+          handleChange={handleChange}
+          value={values.passwordConfirm}
+        />
         <div className="mb-3">
           <Button type="submit">Signup</Button>
         </div>
