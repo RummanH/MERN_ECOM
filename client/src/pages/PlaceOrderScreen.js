@@ -1,7 +1,9 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useSelector } from 'react-redux';
-import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import ListGroup from 'react-bootstrap/esm/ListGroup';
 import Button from 'react-bootstrap/esm/Button';
@@ -9,11 +11,17 @@ import Card from 'react-bootstrap/esm/Card';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 
+import { clearCart } from '../redux-store/features/cartSlice';
 import CheckoutSteps from '../components/CheckoutSteps';
+import { getError } from '../services/getError';
+import { LoadingBox } from '../components';
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
+  const { token } = useSelector((state) => state.user);
   const { shippingAddress, paymentMethod, cartItems } = useSelector(
     (state) => state.cart
   );
@@ -27,7 +35,34 @@ const PlaceOrderScreen = () => {
   const taxPrice = round2(0.15 * itemsPrice);
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
 
-  const handlePlaceOrder = () => {};
+  const handlePlaceOrder = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await axios.post(
+        'https://localhost:5000/api/v1/orders',
+        {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsLoading(false);
+      dispatch(clearCart());
+      navigate(`/order/${data.data.order._id}`);
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(getError(err));
+    }
+  };
 
   useEffect(() => {
     if (!paymentMethod) {
@@ -141,6 +176,7 @@ const PlaceOrderScreen = () => {
                       Place Order
                     </Button>
                   </div>
+                  {isLoading && <LoadingBox />}
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>
