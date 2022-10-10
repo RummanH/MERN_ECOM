@@ -17,25 +17,35 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      fullName: { type: String, required: true },
-      address: { type: String, required: true },
-      city: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+      fullName: { type: String, required: [true, 'Full name is required'] },
+      address: { type: String, required: [true, 'address is required'] },
+      city: { type: String, required: [true, 'city is required'] },
+      postalCode: { type: String, required: [true, 'Postal code is required'] },
+      country: { type: String, required: [true, 'Country is required'] },
     },
 
-    paymentMethod: { type: String, required: true },
+    paymentMethod: {
+      type: String,
+      required: [true, 'Payment method is required'],
+    },
     paymentResult: {
       id: String,
       status: String,
       update_time: String,
       email_address: String,
     },
-    itemsPrice: { type: Number, required: true },
-    shippingPrice: { type: Number, require: true },
-    taxPrice: { type: Number, required: true },
-    totalPrice: { type: Number, require: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    itemsPrice: { type: Number, required: [true, 'Items price is required'] },
+    shippingPrice: {
+      type: Number,
+      require: [true, 'Shipping price is required'],
+    },
+    taxPrice: { type: Number, required: [true, 'Tax price is required'] },
+    totalPrice: { type: Number, require: [true, 'Total price is required'] },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Order must belong to a user'],
+    },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
@@ -43,6 +53,8 @@ const orderSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 

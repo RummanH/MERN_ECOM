@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
+//Bootstrap Components
 import ListGroup from 'react-bootstrap/esm/ListGroup';
 import Button from 'react-bootstrap/esm/Button';
 import Card from 'react-bootstrap/esm/Card';
@@ -13,6 +13,8 @@ import Col from 'react-bootstrap/esm/Col';
 
 import { clearCart } from '../redux-store/features/cartSlice';
 import CheckoutSteps from '../components/CheckoutSteps';
+import { request } from '../services/axios_request';
+import { round2 } from '../services/roundNumber';
 import { getError } from '../services/getError';
 import { LoadingBox } from '../components';
 
@@ -26,8 +28,6 @@ const PlaceOrderScreen = () => {
     (state) => state.cart
   );
 
-  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-
   const itemsPrice = round2(
     cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
@@ -38,8 +38,8 @@ const PlaceOrderScreen = () => {
   const handlePlaceOrder = async () => {
     setIsLoading(true);
     try {
-      const { data } = await axios.post(
-        'https://localhost:5000/api/v1/orders',
+      const { data } = await request.post(
+        '/orders',
         {
           orderItems: cartItems,
           shippingAddress,
@@ -55,12 +55,14 @@ const PlaceOrderScreen = () => {
           },
         }
       );
+
+      console.log(data.data);
+      navigate(`/order/${data.data.order._id}`);
       setIsLoading(false);
       dispatch(clearCart());
-      navigate(`/order/${data.data.order._id}`);
     } catch (err) {
-      setIsLoading(false);
       toast.error(getError(err));
+      setIsLoading(false);
     }
   };
 

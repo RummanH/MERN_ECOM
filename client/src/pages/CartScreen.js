@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { MessageBox } from '../components';
 import React from 'react';
-import axios from 'axios';
 
 //Bootstrap
 import ListGroup from 'react-bootstrap/esm/ListGroup';
@@ -12,7 +11,7 @@ import Card from 'react-bootstrap/esm/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 
-//own
+import { request } from '../services/axios_request';
 import {
   decrease,
   increase,
@@ -25,9 +24,7 @@ const CartScreen = () => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const handleIncrease = async (item, quantity) => {
-    const { data } = await axios.get(
-      `https://localhost:5000/api/v1/products/${item._id}`
-    );
+    const { data } = await request.get(`/products/${item._id}`);
     if (data.data.product.countInStock < quantity + 1) {
       window.alert('Sorry. Product is out of stock');
       return;

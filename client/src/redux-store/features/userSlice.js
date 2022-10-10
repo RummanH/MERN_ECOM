@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
+import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
-
 import {
   removeToLocalStorage,
   setToLocalStorage,
@@ -18,17 +17,12 @@ const initialState = {
   error: '',
 };
 
-const URL = 'https://localhost:5000';
-
 export const signupUser = createAsyncThunk(
   'user/signupUser',
   async (currentUser, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await axios.post(
-        `${URL}/api/v1/users/signup`,
-        currentUser
-      );
+      const { data } = await request.post(`/users/signup`, currentUser);
 
       const { token } = data;
       const { user } = data.data;
@@ -43,10 +37,7 @@ export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (currentUser, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        `${URL}/api/v1/users/login`,
-        currentUser
-      );
+      const { data } = await request.post(`/users/login`, currentUser);
 
       const { token } = data;
       const { user } = data.data;

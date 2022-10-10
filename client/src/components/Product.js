@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
-import axios from 'axios';
 
 //Bootstrap
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 import { addItem, increase } from '../redux-store/features/cartSlice';
+import { request } from '../services/axios_request';
 import Rating from './Rating';
 
 const Product = ({ product }) => {
@@ -19,9 +19,7 @@ const Product = ({ product }) => {
     setAdding(true);
     const existItem = cartItems.find((item) => item._id === product._id);
     const quantity = existItem ? existItem.quantity : 0;
-    const { data } = await axios.get(
-      `https://localhost:5000/api/v1/products/${product._id}`
-    );
+    const { data } = await request.get(`/products/${product._id}`);
 
     //can use any value if not 1
     if (data.data.product.countInStock < quantity + 1) {

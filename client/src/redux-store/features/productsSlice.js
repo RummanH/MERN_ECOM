@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getError } from '../../services/getError';
-import axios from 'axios';
 import _ from 'lodash';
 
-const URL = 'https://localhost:5000';
+import { request } from '../../services/axios_request';
+import { getError } from '../../services/getError';
 
 const initialState = {
   loading: false,
@@ -16,7 +15,7 @@ export const getAllProducts = createAsyncThunk(
   async (param, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await axios.get(`${URL}/api/v1/products`);
+      const { data } = await request.get(`/products`);
       return data.data.products;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));
@@ -28,7 +27,7 @@ export const getOneProduct = createAsyncThunk(
   'products/getOneProduct',
   async ({ slug }, thunkAPI) => {
     try {
-      const { data } = await axios.get(`${URL}/api/v1/products/slug/${slug}`);
+      const { data } = await request.get(`/products/slug/${slug}`);
       return data.data.product;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));

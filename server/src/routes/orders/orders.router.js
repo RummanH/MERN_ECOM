@@ -6,6 +6,7 @@ const catchAsync = require('../../services/catchAsync');
 
 const router = Router();
 
+//From this point all route is protected
 router.use(catchAsync(httpProtect));
 router.route('/').post(catchAsync(httpCreateOrder));
 
