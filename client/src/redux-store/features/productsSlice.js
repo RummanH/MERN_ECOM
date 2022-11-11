@@ -13,6 +13,7 @@ const initialState = {
 export const getAllProducts = createAsyncThunk(
   'products/getAllProducts',
   async (param, thunkAPI) => {
+    console.log(thunkAPI.getState().user.token);
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
       const { data } = await request.get(`/products`, {

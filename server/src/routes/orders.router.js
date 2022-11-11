@@ -14,13 +14,13 @@ const router = Router({ mergeParams: true });
 
 router.get(
   '/checkout-session/:orderId',
-  httpProtect,
+  catchAsync(httpProtect),
   catchAsync(httpGetCheckoutSession)
 );
 
 router.get(
   '/checkout-completed/:_id',
-  httpProtect,
+  catchAsync(httpProtect),
   catchAsync(httpCreateBookingCheckout)
 );
 //From this point all route is protected

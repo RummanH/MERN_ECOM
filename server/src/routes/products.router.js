@@ -1,4 +1,5 @@
 const { Router } = require('express');
+
 const { httpProtect } = require('../controllers/auth.controller');
 const {
   httpGetOneProductBySlug,
@@ -15,6 +16,6 @@ router.route('/slug/:slug').get(catchAsync(httpGetOneProductBySlug));
 
 //RESTful
 router.route('/').get(catchAsync(httpProtect), catchAsync(httpGetAllProducts));
-router.route('/:id').get(catchAsync(httpGetOneProduct));
+router.route('/:_id').get(catchAsync(httpGetOneProduct));
 
 module.exports = router;

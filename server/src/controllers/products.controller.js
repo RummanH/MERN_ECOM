@@ -1,11 +1,12 @@
 const {
-  getOneProduct,
   getAllProducts,
+  getOneProductBySlug,
+  getOneProductById,
 } = require('../models/products/products.model');
 const AppError = require('../services/AppError');
 
 async function httpGetOneProductBySlug(req, res, next) {
-  const product = await getOneProduct({ slug: req.params.slug });
+  const product = await getOneProductBySlug(req.params.slug);
   if (!product) {
     return next(new AppError('No product found!', 404));
   }
@@ -18,7 +19,7 @@ async function httpGetOneProductBySlug(req, res, next) {
 }
 
 async function httpGetOneProduct(req, res, next) {
-  const product = await getOneProduct({ _id: req.params.id });
+  const product = await getOneProductById(req.params._id);
   if (!product) {
     return next(new AppError('No product found!', 404));
   }

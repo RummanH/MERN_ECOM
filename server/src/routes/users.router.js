@@ -1,16 +1,14 @@
 const { Router } = require('express');
 const {
-  httpUpdateMyPassword,
   httpProtect,
-} = require('../controllers/auth.controller');
-const {
   httpSignupUser,
   httpLoginUser,
+  httpChangePassword,
+} = require('../controllers/auth.controller');
+const {
   httpUpdateMe,
-  httpDeleteMe,
-  httpGetOneUser,
-  httpUpdateUser,
   httpGetAllUsers,
+  httpGetOneUser,
 } = require('../controllers/users.controller');
 
 const catchAsync = require('../services/catchAsync');
@@ -23,15 +21,11 @@ router.post('/login', catchAsync(httpLoginUser));
 
 //From this point all protected routes
 router.use(catchAsync(httpProtect));
-router.patch('/updateMyPassword', catchAsync(httpUpdateMyPassword));
+router.patch('/updateMyPassword', catchAsync(httpChangePassword));
 router.patch('/updateMe', catchAsync(httpUpdateMe));
-router.delete('/deleteMe', catchAsync(httpDeleteMe));
 
 //RESTFul
 router.route('/').get(catchAsync(httpGetAllUsers));
-router
-  .route('/:id')
-  .get(catchAsync(httpGetOneUser))
-  .patch(catchAsync(httpUpdateUser));
+router.route('/:id').get(catchAsync(httpGetOneUser));
 
 module.exports = router;

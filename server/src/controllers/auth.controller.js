@@ -3,14 +3,14 @@ const crypto = require('crypto');
 
 const jwt = require('jsonwebtoken');
 
+const AppError = require('../services/AppError');
+const Email = require('../services/Email');
 const {
   getOneUserByEmail,
   getOneUserByToken,
   getOneUserById,
   saveUser,
 } = require('../models/users/users.model');
-const AppError = require('../services/AppError');
-const Email = require('../services/Email');
 
 function sendCookie(token, res) {
   const cookieOptions = {

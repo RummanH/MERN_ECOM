@@ -1,18 +1,15 @@
-const products = require('./products.mongo');
+const Product = require('./products.mongo');
 
 async function getAllProducts() {
-  return await products.find({}, { __v: 0 });
+  return await Product.find();
 }
 
-async function getOneProduct({ _id, slug }) {
-  let filter = {};
-  if (slug) {
-    filter = { slug };
-  }
-  if (_id) {
-    filter = { _id };
-  }
-  return await products.findOne(filter);
+async function getOneProductById(_id) {
+  return await Product.findById(_id);
 }
 
-module.exports = { getAllProducts, getOneProduct };
+async function getOneProductBySlug(slug) {
+  return await Product.findOne({ slug });
+}
+
+module.exports = { getAllProducts, getOneProductBySlug, getOneProductById };

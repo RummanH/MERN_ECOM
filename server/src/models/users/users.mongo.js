@@ -32,7 +32,10 @@ const userSchema = new mongoose.Schema(
         message: 'Passwords are not the same!',
       },
     },
-    photo: String,
+    thumbnail: {
+      type: String,
+      default: 'https://gravatar.com/avatar/3385a4b3c13baa8a700cb41a27ef87c1',
+    },
 
     role: {
       type: String,
@@ -45,6 +48,8 @@ const userSchema = new mongoose.Schema(
     },
     userNumber: Number,
     passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   {
     timestamps: true,

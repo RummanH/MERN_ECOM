@@ -31,7 +31,7 @@ async function httpCreateOrder(req, res, next) {
 }
 
 async function httpGetOneOrder(req, res, next) {
-  const order = await getOneOrder({ _id: req.params._id });
+  const order = await getOneOrder(req.params._id);
 
   if (!order) {
     return next(new AppError('Order not found!', 404));
@@ -41,7 +41,7 @@ async function httpGetOneOrder(req, res, next) {
 }
 
 async function httpPayOrder(req, res, next) {
-  const order = await getOneOrder({ _id: req.params._id });
+  const order = await getOneOrder(req.params._id);
   if (!order) {
     return next(new AppError('No order found', 404));
   }
@@ -92,8 +92,6 @@ async function httpGetCheckoutSession(req, res, next) {
     };
   });
 
-  console.log(order);
-
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     success_url: `http://localhost:3000/order/${req.params.orderId}/true`,
@@ -101,18 +99,6 @@ async function httpGetCheckoutSession(req, res, next) {
     customer_email: req.user.email,
     client_reference_id: req.params.orderId,
     shipping_address_collection: { allowed_countries: ['US', 'CA'] },
-    shipping_options: [
-      {
-        shipping_rate_data: {
-          fixed_amount: { amount: 0, currency: 'usd' },
-          display_name: 'Free shipping',
-          delivery_estimate: {
-            minimum: { unit: 'business_day', value: 5 },
-            maximum: { unit: 'business_day', value: 7 },
-          },
-        },
-      },
-    ],
     mode: 'payment',
     line_items: items,
   });
@@ -124,7 +110,7 @@ async function httpGetCheckoutSession(req, res, next) {
 }
 
 async function httpCreateBookingCheckout(req, res, next) {
-  await updateOrder({ _id: req.params._id });
+  await updateOrder(req.params._id);
   res.status(200).json({ status: 'success' });
 }
 
