@@ -1,11 +1,12 @@
 const { Router } = require('express');
-
-const catchAsync = require('../../services/catchAsync');
+const { httpProtect } = require('../controllers/auth.controller');
 const {
   httpGetOneProductBySlug,
   httpGetAllProducts,
   httpGetOneProduct,
-} = require('./products.controller');
+} = require('../controllers/products.controller');
+
+const catchAsync = require('../services/catchAsync');
 
 const router = Router();
 
@@ -13,7 +14,7 @@ const router = Router();
 router.route('/slug/:slug').get(catchAsync(httpGetOneProductBySlug));
 
 //RESTful
-router.route('/').get(catchAsync(httpGetAllProducts));
+router.route('/').get(catchAsync(httpProtect), catchAsync(httpGetAllProducts));
 router.route('/:id').get(catchAsync(httpGetOneProduct));
 
 module.exports = router;

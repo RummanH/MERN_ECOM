@@ -21,6 +21,7 @@ import {
   SignUpScreen,
   PaymentMethodScreen,
   PlaceOrderScreen,
+  OrderScreen,
 } from './pages/index';
 import { signoutUser } from './redux-store/features/userSlice';
 
@@ -29,6 +30,7 @@ import {
   clearPaymentMethod,
   clearShippingAddress,
 } from './redux-store/features/cartSlice';
+import OrderHistory from './pages/OrderHistory';
 
 function App() {
   const dispatch = useDispatch();
@@ -98,6 +100,8 @@ function App() {
               <Route path="/shipping" element={<ShippingAddressScreen />} />
               <Route path="/payment" element={<PaymentMethodScreen />} />
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
+              <Route path="/order/:id" element={<OrderScreen />} />
+              <Route path="/order/:id/:completed" element={<OrderScreen />} />
             </Routes>
           </Container>
         </main>

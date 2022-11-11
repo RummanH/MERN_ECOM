@@ -1,21 +1,19 @@
 const { Router } = require('express');
-
-const catchAsync = require('../../services/catchAsync');
 const {
-  httpProtect,
-  httpRestrictTo,
   httpUpdateMyPassword,
-} = require('./auth.controller');
-
+  httpProtect,
+} = require('../controllers/auth.controller');
 const {
   httpSignupUser,
   httpLoginUser,
   httpUpdateMe,
   httpDeleteMe,
-  httpGetAllUsers,
   httpGetOneUser,
   httpUpdateUser,
-} = require('./users.controller');
+  httpGetAllUsers,
+} = require('../controllers/users.controller');
+
+const catchAsync = require('../services/catchAsync');
 
 const router = Router();
 
@@ -28,9 +26,6 @@ router.use(catchAsync(httpProtect));
 router.patch('/updateMyPassword', catchAsync(httpUpdateMyPassword));
 router.patch('/updateMe', catchAsync(httpUpdateMe));
 router.delete('/deleteMe', catchAsync(httpDeleteMe));
-
-//From this point all Authorized routes
-router.use(httpRestrictTo('admin'));
 
 //RESTFul
 router.route('/').get(catchAsync(httpGetAllUsers));

@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', async function (next) {
-  //run this if password modified
+  // Only run this function if password modified
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
@@ -60,14 +60,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
-
+// Instance method available in all documents created with the model
 userSchema.methods.createJWT = async function () {
-  return await jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+  return await jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };

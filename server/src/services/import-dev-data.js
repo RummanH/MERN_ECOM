@@ -1,4 +1,4 @@
-const products = require('../models/products/products.mongo');
+const Product = require('../models/products/products.mongo');
 const { mongoConnect } = require('./mongo');
 const data = require('../../data/data');
 
@@ -8,7 +8,7 @@ const data = require('../../data/data');
 
 const importData = async () => {
   try {
-    await products.create(data.products);
+    await Product.create(data.products);
     console.log('Successfully loaded data');
   } catch (err) {
     console.log(err);
@@ -18,7 +18,7 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await products.deleteMany();
+    await Product.deleteMany();
   } catch (err) {
     console.log(err);
   }

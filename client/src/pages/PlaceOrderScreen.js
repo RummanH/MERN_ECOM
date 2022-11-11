@@ -56,7 +56,6 @@ const PlaceOrderScreen = () => {
         }
       );
 
-      console.log(data.data);
       navigate(`/order/${data.data.order._id}`);
       setIsLoading(false);
       dispatch(clearCart());

@@ -3,8 +3,10 @@ import ShippingAddressScreen from './ShippingAddressScreen';
 import PaymentMethodScreen from './PaymentMethodScreen';
 import PlaceOrderScreen from './PlaceOrderScreen';
 import ProductScreen from './ProductScreen';
+import OrderHistory from './OrderHistory';
 import SigninScreen from './SigninScreen';
 import SignUpScreen from './SignupScreen';
+import OrderScreen from './OrderScreen';
 import HomeScreen from './HomeScreen';
 
 export {
@@ -15,5 +17,6 @@ export {
   SignUpScreen,
   SigninScreen,
   HomeScreen,
+  OrderScreen,
   CartScreen,
 };

@@ -1,4 +1,4 @@
-const AppError = require('./AppError');
+const AppError = require('../services/AppError');
 
 function sendErrorDev(err, res) {
   return res.status(err.statusCode).json({
@@ -10,14 +10,15 @@ function sendErrorDev(err, res) {
 }
 
 function sendErrorProd(err, res) {
-  //operation error that I CREATED
+  // operation error that I CREATED
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
     });
-    //programming error. don't leak
   }
+
+  // programming error. don't leak console it
   console.error(err);
   return res.status(500).json({
     status: 'error',

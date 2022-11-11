@@ -1,8 +1,8 @@
 const {
   getOneProduct,
   getAllProducts,
-} = require('../../models/products/products.model');
-const AppError = require('../../services/AppError');
+} = require('../models/products/products.model');
+const AppError = require('../services/AppError');
 
 async function httpGetOneProductBySlug(req, res, next) {
   const product = await getOneProduct({ slug: req.params.slug });

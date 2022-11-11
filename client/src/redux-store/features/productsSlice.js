@@ -15,7 +15,11 @@ export const getAllProducts = createAsyncThunk(
   async (param, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await request.get(`/products`);
+      const { data } = await request.get(`/products`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
       return data.data.products;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));
