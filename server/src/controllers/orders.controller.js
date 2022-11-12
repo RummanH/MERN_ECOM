@@ -67,8 +67,10 @@ async function httpPayOrder(req, res, next) {
 }
 
 async function httpGetAllOrders(req, res, next) {
-  const orders = await getAllOrders({ userId: req.params.userId });
-  return res.status(200).json({ status: 'success', data: { orders } });
+  const orders = await getAllOrders(req.params.userId);
+  return res
+    .status(200)
+    .json({ status: 'success', results: orders.length, data: { orders } });
 }
 
 async function httpGetCheckoutSession(req, res, next) {

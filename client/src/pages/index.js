@@ -15,6 +15,7 @@ export {
   PlaceOrderScreen,
   ProductScreen,
   SignUpScreen,
+  OrderHistory,
   SigninScreen,
   HomeScreen,
   OrderScreen,

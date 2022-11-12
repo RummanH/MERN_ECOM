@@ -8,8 +8,11 @@ async function getOneOrder(_id) {
   return await Order.findById(_id);
 }
 
-async function getAllOrders() {
-  return await Order.find();
+async function getAllOrders(userId) {
+  console.log(userId);
+  let filter = {};
+  if (userId) filter = { user: userId };
+  return await Order.find(filter);
 }
 
 async function updateOrder(_id) {
