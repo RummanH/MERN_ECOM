@@ -20,7 +20,7 @@ const reducer = (state, action) => {
   }
 };
 
-const OrderHistory = () => {
+const OrderHistoryPage = () => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.user);
 
@@ -75,12 +75,12 @@ const OrderHistory = () => {
                   <td>{order._id}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td>{order.totalPrice.toFixed(2)}</td>
-                  <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
                   <td>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
                       : 'No'}
                   </td>
+                  <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
                   <td>
                     <Button
                       type="button"
@@ -102,4 +102,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default OrderHistoryPage;

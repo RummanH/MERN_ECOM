@@ -15,7 +15,7 @@ const router = Router();
 router.route('/slug/:slug').get(catchAsync(httpGetOneProductBySlug));
 
 //RESTful
-router.route('/').get(catchAsync(httpProtect), catchAsync(httpGetAllProducts));
+router.route('/').get(catchAsync(httpGetAllProducts));
 router.route('/:_id').get(catchAsync(httpGetOneProduct));
 
 module.exports = router;

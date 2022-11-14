@@ -9,17 +9,17 @@ import Container from 'react-bootstrap/esm/Container';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 
-import { signupUser } from '../redux-store/features/userSlice';
+import { loginUser } from '../redux-store/features/userSlice';
 import { FormRow } from '../components';
 
-const initialValue = { name: '', email: '', password: '', passwordConfirm: '' };
+const initialValue = { email: '', password: '' };
 
-const SignUpScreen = () => {
+const SignInPage = () => {
   const [values, setValue] = useState(initialValue);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //How to get params value
+  //Here I am getting redirect value from query
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
@@ -29,15 +29,19 @@ const SignUpScreen = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (values.password !== values.passwordConfirm) {
-      toast.error('Passwords are not the same!');
+    if (!values.email || !values.password) {
+      toast.error('Please provide email and password!');
       return;
     }
-    dispatch(signupUser(values));
+    dispatch(loginUser(values));
   };
 
   const handleChange = (e) => {
     setValue({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const googleButtonClick = () => {
+    window.open('https://localhost:5000/auth/google');
   };
 
   useEffect(() => {
@@ -49,52 +53,49 @@ const SignUpScreen = () => {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Signup</title>
+        <title>Sign In</title>
       </Helmet>
-      <h1 className="my-3">Signup</h1>
+      <h1 className="my-3">Sign In</h1>
       <Form onSubmit={handleSubmit}>
         <FormRow
-          name="name"
-          labelText="Name"
-          type="text"
-          handleChange={handleChange}
-          value={values.name}
-        />
-
-        <FormRow
-          name="email"
+          controlId="email"
           labelText="Email"
           type="email"
+          name="email"
           handleChange={handleChange}
           value={values.email}
         />
 
         <FormRow
-          name="password"
+          controlId="password"
           labelText="Password"
           type="password"
+          name="password"
           handleChange={handleChange}
           value={values.password}
         />
 
-        <FormRow
-          name="passwordConfirm"
-          labelText="Confirm Password"
-          type="password"
-          handleChange={handleChange}
-          value={values.passwordConfirm}
-        />
         <div className="mb-3">
-          <Button type="submit">Signup</Button>
+          <Button type="submit">Sign In</Button>
         </div>
 
+        <p className="center">Or</p>
+        <button
+          onClick={googleButtonClick}
+          type="button"
+          className="btn btn-block"
+          style={{ backgroundColor: '#dd4b39', color: 'white' }}
+        >
+          Login with google
+        </button>
+
         <div className="mb-3">
-          Already have an account?{' '}
-          <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+          New customer?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
         </div>
       </Form>
     </Container>
   );
 };
 
-export default SignUpScreen;
+export default SignInPage;

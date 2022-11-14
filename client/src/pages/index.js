@@ -1,23 +1,27 @@
-import CartScreen from './CartScreen';
-import ShippingAddressScreen from './ShippingAddressScreen';
-import PaymentMethodScreen from './PaymentMethodScreen';
-import PlaceOrderScreen from './PlaceOrderScreen';
-import ProductScreen from './ProductScreen';
-import OrderHistory from './OrderHistory';
-import SigninScreen from './SigninScreen';
-import SignUpScreen from './SignupScreen';
-import OrderScreen from './OrderScreen';
-import HomeScreen from './HomeScreen';
+import ShippingAddressPage from './ShippingAddressPage';
+import PaymentMethodPage from './PaymentMethodPage';
+import OrderHistoryPage from './OrderHistoryPage';
+import PlaceOrderPage from './PlaceOrderPage';
+import SettingsPage from './SettingsPage';
+import ProfilePage from './ProfilePage';
+import ProductPage from './ProductPage';
+import SignInPage from './SignInPage';
+import SignUpPage from './SignUpPage';
+import OrderPage from './OrderPage';
+import CartPage from './CartPage';
+import HomePage from './HomePage';
 
 export {
-  ShippingAddressScreen,
-  PaymentMethodScreen,
-  PlaceOrderScreen,
-  ProductScreen,
-  SignUpScreen,
-  OrderHistory,
-  SigninScreen,
-  HomeScreen,
-  OrderScreen,
-  CartScreen,
+  ShippingAddressPage,
+  PaymentMethodPage,
+  OrderHistoryPage,
+  PlaceOrderPage,
+  SettingsPage,
+  ProfilePage,
+  ProductPage,
+  SignUpPage,
+  SignInPage,
+  OrderPage,
+  CartPage,
+  HomePage,
 };

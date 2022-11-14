@@ -223,7 +223,7 @@ async function httpChangePassword(req, res, next) {
   const token = await user.createJWT();
   user.password = undefined;
   sendCookie(token, res);
-  return res.status(201).json({ status: 'success', token, data: { user } });
+  return res.status(201).json({ status: 'success', token });
 }
 
 module.exports = {

@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/esm/Form';
 
 import CheckoutSteps from '../components/CheckoutSteps';
 
-const PaymentMethodScreen = () => {
+const PaymentMethodPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate('/');
   const { paymentMethod, shippingAddress } = useSelector((state) => state.cart);
@@ -69,4 +69,4 @@ const PaymentMethodScreen = () => {
   );
 };
 
-export default PaymentMethodScreen;
+export default PaymentMethodPage;

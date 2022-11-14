@@ -30,7 +30,7 @@ async function httpGetOneProduct(req, res, next) {
 }
 
 async function httpGetAllProducts(req, res, next) {
-  const products = await getAllProducts();
+  const products = await getAllProducts(req.query);
   return res.status(200).json({
     status: 'success',
     results: products.length,

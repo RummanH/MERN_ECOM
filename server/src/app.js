@@ -1,6 +1,7 @@
 const path = require('path');
 
 const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 const { Strategy } = require('passport-google-oauth20');
@@ -37,6 +38,7 @@ async function verifyCallback(accessToken, refreshToken, profile, done) {
 passport.use(new Strategy(authOptions, verifyCallback));
 
 const app = express();
+app.use(morgan('dev'));
 app.use(
   cors({
     origin: 'http://localhost:3000',

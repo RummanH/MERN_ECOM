@@ -18,7 +18,7 @@ import { round2 } from '../services/roundNumber';
 import { getError } from '../services/getError';
 import { LoadingBox } from '../components';
 
-const PlaceOrderScreen = () => {
+const PlaceOrderPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -188,4 +188,4 @@ const PlaceOrderScreen = () => {
   );
 };
 
-export default PlaceOrderScreen;
+export default PlaceOrderPage;

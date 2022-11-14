@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { getAllProducts } from '../redux-store/features/productsSlice';
 import { LoadingBox, MessageBox, Product } from '../components';
 
-const HomeScreen = () => {
+const HomePage = () => {
   const dispatch = useDispatch();
   const { products, error, loading } = useSelector((state) => state.products);
 
@@ -46,4 +46,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default HomePage;

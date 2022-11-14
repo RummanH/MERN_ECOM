@@ -18,7 +18,7 @@ import {
   removeItem,
 } from '../redux-store/features/cartSlice';
 
-const CartScreen = () => {
+const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
@@ -136,4 +136,4 @@ const CartScreen = () => {
   );
 };
 
-export default CartScreen;
+export default CartPage;

@@ -36,7 +36,7 @@ const reducer = (state, action) => {
   }
 };
 
-const OrderScreen = () => {
+const OrderPage = () => {
   const { token } = useSelector((state) => state.user);
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -322,4 +322,4 @@ const OrderScreen = () => {
   );
 };
 
-export default OrderScreen;
+export default OrderPage;

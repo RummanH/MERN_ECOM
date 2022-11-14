@@ -16,7 +16,7 @@ import { addItem, increase } from '../redux-store/features/cartSlice';
 import { LoadingBox, MessageBox, Rating } from '../components';
 import { request } from '../services/axios_request';
 
-const ProductScreen = () => {
+const ProductPage = () => {
   const navigate = useNavigate();
 
   //How to get value from params
@@ -127,4 +127,4 @@ const ProductScreen = () => {
   );
 };
 
-export default ProductScreen;
+export default ProductPage;

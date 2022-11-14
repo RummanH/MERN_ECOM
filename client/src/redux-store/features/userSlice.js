@@ -48,6 +48,48 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const updateMe = createAsyncThunk(
+  'user/updateMe',
+  async (currentUpdate, thunkAPI) => {
+    //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
+    try {
+      const { data } = await request.patch(`/users/updateMe`, currentUpdate, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+
+      const { user } = data.data;
+      return { user };
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  'user/updatePassword',
+  async (currentUpdate, thunkAPI) => {
+    //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
+    try {
+      const { data } = await request.patch(
+        `/users/changePassword`,
+        currentUpdate,
+        {
+          headers: {
+            authorization: `Bearer ${thunkAPI.getState().user.token}`,
+          },
+        }
+      );
+
+      const { token } = data;
+      return { token };
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -95,6 +137,42 @@ const userSlice = createSlice({
     },
 
     [loginUser.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      toast.error(payload);
+    },
+
+    [updateMe.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [updateMe.fulfilled]: (state, { payload }) => {
+      toast.success('Profile updated successfully.');
+      state.loading = false;
+      state.user = payload.user;
+      state.error = '';
+      setToLocalStorage('user', JSON.stringify(state.user));
+    },
+
+    [updateMe.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      toast.error(payload);
+    },
+
+    [changePassword.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [changePassword.fulfilled]: (state, { payload }) => {
+      toast.success('Password updated successfully.');
+      state.loading = false;
+      state.token = payload.token;
+      state.error = '';
+      setToLocalStorage('token', state.token);
+    },
+
+    [changePassword.rejected]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
       toast.error(payload);

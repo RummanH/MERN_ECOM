@@ -2,7 +2,7 @@ const data = {
   products: [
     {
       name: 'Nike Slim Shirt',
-      category: 'Shirts',
+      category: '6370aa97dedc3531cc557887',
       image: '/images/p1.jpg',
       price: 120,
       countInStock: 10,
@@ -13,7 +13,7 @@ const data = {
     },
     {
       name: 'Adidas Fit Shirt',
-      category: 'Shirts',
+      category: '6370aa97dedc3531cc557887',
       image: '/images/p2.jpg',
       price: 100,
       countInStock: 20,
@@ -24,7 +24,7 @@ const data = {
     },
     {
       name: 'Lacoste Free Shirt',
-      category: 'Shirts',
+      category: '6370aa97dedc3531cc557887',
       image: '/images/p3.jpg',
       price: 220,
       countInStock: 0,
@@ -35,7 +35,7 @@ const data = {
     },
     {
       name: 'Nike Slim Pant',
-      category: 'Pants',
+      category: '6370ab9c815895a217fd5104',
       image: '/images/p4.jpg',
       price: 78,
       countInStock: 15,
@@ -46,7 +46,7 @@ const data = {
     },
     {
       name: 'Puma Slim Pant',
-      category: 'Pants',
+      category: '6370ab9c815895a217fd5104',
       image: '/images/p5.jpg',
       price: 65,
       countInStock: 5,
@@ -57,7 +57,7 @@ const data = {
     },
     {
       name: 'Adidas Fit Pant',
-      category: 'Pants',
+      category: '6370ab9c815895a217fd5104',
       image: '/images/p6.jpg',
       price: 139,
       countInStock: 12,

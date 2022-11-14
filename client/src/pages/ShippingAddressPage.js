@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import { saveShippingAddress } from '../redux-store/features/cartSlice';
 import { CheckoutSteps, FormRow } from '../components';
 
-const ShippingAddressScreen = () => {
+const ShippingAddressPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -104,4 +104,4 @@ const ShippingAddressScreen = () => {
   );
 };
 
-export default ShippingAddressScreen;
+export default ShippingAddressPage;

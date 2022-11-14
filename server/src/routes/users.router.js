@@ -25,7 +25,7 @@ router.post('/login', catchAsync(httpLoginUser));
 
 //From this point all protected routes
 router.use(catchAsync(httpProtect));
-router.patch('/updateMyPassword', catchAsync(httpChangePassword));
+router.patch('/changePassword', catchAsync(httpChangePassword));
 router.patch('/updateMe', catchAsync(httpUpdateMe));
 
 //RESTFul

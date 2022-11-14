@@ -4,6 +4,8 @@ const request = axios.create({
   baseURL: 'https://localhost:5000/api/v1',
 });
 
+request.defaults.withCredentials = true;
+
 //Interceptors are like middleware
 
 request.interceptors.request.use(

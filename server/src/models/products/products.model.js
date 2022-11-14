@@ -1,7 +1,27 @@
+const ApiFeatures = require('../../services/ApiFeatures');
 const Product = require('./products.mongo');
 
-async function getAllProducts() {
-  return await Product.find();
+async function getAllProducts(queryString) {
+  const features = new ApiFeatures(Product.find(), queryString)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  if (queryString.search) {
+    const { search } = queryString;
+    const searchFilter = search
+      ? {
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+          ],
+        }
+      : {};
+    features.query.find(searchFilter);
+  }
+
+  return await features.query;
 }
 
 async function getOneProductById(_id) {

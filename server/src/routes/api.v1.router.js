@@ -1,5 +1,6 @@
 const { Router } = require('express');
 
+const categoryRouter = require('./categories.router');
 const productRouter = require('./products.router');
 const AppError = require('../services/AppError');
 const orderRouter = require('./orders.router');
@@ -11,6 +12,7 @@ router.get('/keys/paypal', (req, res, next) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
 });
 
+router.use('/categories', categoryRouter);
 router.use('/products', productRouter);
 router.use('/orders', orderRouter);
 router.use('/users', userRouter);
