@@ -40,12 +40,9 @@ import {
   clearPaymentMethod,
   clearShippingAddress,
 } from './redux-store/features/cartSlice';
-import SearchBox from './components/SearchBox';
 
 import { request } from './services/axios_request';
-import ProtectedRoute from './components/ProtectedRoute';
-
-import AdminRoute from './components/AdminRoute';
+import { AdminRoute, ProtectedRoute, SearchBox } from './components';
 
 function App() {
   const dispatch = useDispatch();

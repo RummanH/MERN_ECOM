@@ -36,7 +36,6 @@ const productSchema = new mongoose.Schema(
     },
   },
   {
-    //will create createdAt and updatedAt
     timestamps: true,
   }
 );
@@ -46,8 +45,6 @@ productSchema.pre(/^find/, function (next) {
   next();
 });
 
-//Document middleware will run before any document being saved.
-//Only run before save and create command
 productSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lowercase: true });
   next();

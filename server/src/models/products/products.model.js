@@ -1,6 +1,10 @@
 const ApiFeatures = require('../../services/ApiFeatures');
 const Product = require('./products.mongo');
 
+async function createProduct(currentProduct) {
+  return await Product.create(currentProduct);
+}
+
 async function getAllProducts(queryString) {
   const features = new ApiFeatures(Product.find(), queryString)
     .filter()
@@ -32,25 +36,22 @@ async function getOneProductBySlug(slug) {
   return await Product.findOne({ slug });
 }
 
-async function createProduct(currentProduct) {
-  return await Product.create(currentProduct);
-}
-
-async function deleteProduct(_id) {
-  return await Product.findByIdAndDelete(_id);
-}
-
 async function updateProduct(_id, currentUpdate) {
   return await Product.findByIdAndUpdate(_id, currentUpdate, {
     new: true,
     runValidators: true,
   });
 }
+
+async function deleteProduct(_id) {
+  return await Product.findByIdAndDelete(_id);
+}
+
 module.exports = {
-  getAllProducts,
-  getOneProductBySlug,
-  getOneProductById,
   createProduct,
+  getAllProducts,
+  getOneProductById,
+  getOneProductBySlug,
   updateProduct,
   deleteProduct,
 };

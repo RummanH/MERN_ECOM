@@ -1,14 +1,16 @@
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { toast } from 'react-toastify';
+
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
-import { Helmet } from 'react-helmet-async';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { FormRow } from '../components';
-import { createProduct } from '../redux-store/features/productsSlice';
-import { request } from '../services/axios_request';
-import { getError } from '../services/getError';
+
+import { createProduct } from '../../redux-store/features/productsSlice';
+import { request } from '../../services/axios_request';
+import { getError } from '../../services/getError';
+import { FormRow } from '../../components';
 
 const CreateProductPage = () => {
   const { token } = useSelector((state) => state.user);
@@ -24,7 +26,6 @@ const CreateProductPage = () => {
   const [description, setDescription] = useState('');
   const [categories, setCategories] = useState([]);
 
-  console.log(category);
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
@@ -39,6 +40,7 @@ const CreateProductPage = () => {
       );
 
       dispatch(createProduct(data.data.product));
+      toast.success('Product created!');
       navigate('/admin/productlist');
     } catch (err) {
       toast.error(getError(err));
@@ -89,11 +91,13 @@ const CreateProductPage = () => {
           value={image}
         />
 
+        <label style={{ marginBottom: '7px' }}>Select a category</label>
         <select
           onChange={(e) => setCategory(e.target.value)}
-          class="form-select"
+          className="form-select"
+          style={{ marginBottom: '13px', opacity: '.9' }}
         >
-          <option selected>Please select a category</option>
+          <option selected>select</option>
           {categories.map((c) => {
             return <option value={c._id}>{c.name}</option>;
           })}

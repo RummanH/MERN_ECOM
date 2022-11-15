@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
 import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
@@ -122,16 +123,16 @@ const productsSlice = createSlice({
     },
 
     [deleteProduct.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.error = '';
       state.loading = false;
       state.products = _.omit(state.products, action.payload);
-      console.log(state.products);
+      toast.success('Product Deleted!');
     },
 
     [getOneProduct.rejected]: (state, action) => {
       state.error = action.payload;
       state.loading = false;
+      toast.error(action.payload);
     },
   },
 });

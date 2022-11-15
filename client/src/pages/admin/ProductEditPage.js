@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import FormRow from '../components/FormRow';
+import FormRow from '../../components/FormRow';
 import {
   getOneProductById,
   updateProduct,
-} from '../redux-store/features/productsSlice';
-import { request } from '../services/axios_request';
+} from '../../redux-store/features/productsSlice';
+import { request } from '../../services/axios_request';
 import Form from 'react-bootstrap/esm/Form';
 import Button from 'react-bootstrap/esm/Button';
-import { getError } from '../services/getError';
+import { getError } from '../../services/getError';
 import { toast } from 'react-toastify';
 
 const ProductEditPage = () => {
@@ -129,12 +129,13 @@ const ProductEditPage = () => {
           <label style={{ marginBottom: '7px' }}>Select a category</label>
           <select
             onChange={(e) => setCategory(e.target.value)}
-            class="form-select"
+            className="form-select"
+            style={{ marginBottom: '13px', opacity: '.9' }}
           >
-            {categories.map((c) => {
-              console.log(c);
-              return <option value={c._id}>{c.name}</option>;
-            })}
+            <option selected>select</option>
+            {categories.map((c) => (
+              <option value={c._id}>{c.name}</option>
+            ))}
           </select>
 
           <FormRow

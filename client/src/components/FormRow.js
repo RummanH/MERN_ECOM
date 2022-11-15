@@ -1,6 +1,5 @@
 import React from 'react';
 
-//Bootstrap
 import Form from 'react-bootstrap/esm/Form';
 
 const FormRow = ({ name, labelText, type, handleChange, value }) => {

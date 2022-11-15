@@ -3,11 +3,11 @@ import Button from 'react-bootstrap/esm/Button';
 import Row from 'react-bootstrap/esm/Row';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LoadingBox, MessageBox } from '../components';
+import { LoadingBox, MessageBox } from '../../components';
 import {
   deleteProduct,
   getAllProducts,
-} from '../redux-store/features/productsSlice';
+} from '../../redux-store/features/productsSlice';
 
 const ProductListPage = () => {
   const navigate = useNavigate();
@@ -15,10 +15,10 @@ const ProductListPage = () => {
 
   const { products, loading, error } = useSelector((state) => state.products);
   const allProducts = Object.values(products);
-  console.log(allProducts);
 
   const handleDelete = (_id) => {
-    dispatch(deleteProduct(_id));
+    if (window.confirm('Are you sure?')) dispatch(deleteProduct(_id));
+    return;
   };
 
   useEffect(() => {
@@ -49,6 +49,7 @@ const ProductListPage = () => {
               <th>PRICE</th>
               <th>CATEGORY</th>
               <th>BRAND</th>
+              <th>STOCK</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -60,6 +61,7 @@ const ProductListPage = () => {
                 <td>{product.price}</td>
                 <td>{product.category.name}</td>
                 <td>{product.brand}</td>
+                <td>{product.countInStock}</td>
                 <td>
                   <Button
                     variant="primary"
@@ -72,7 +74,7 @@ const ProductListPage = () => {
                     Edit
                   </Button>
                   <Button
-                    variant="primary"
+                    variant="light"
                     type="button"
                     onClick={() => handleDelete(product._id)}
                   >

@@ -42,7 +42,6 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { id: orderId, completed } = params;
-  console.log(completed);
 
   const stripe = window.Stripe(
     'pk_test_51Ltb6YAGTu4kgviAqjyu9JofCrpxqN41CkwH0jjaGJiBsd8rz3x8PFKLg49mq2oxW6lSJI5uyqfXjMzcQapWgKmG00HnOyYO3h'
