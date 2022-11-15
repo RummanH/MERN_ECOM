@@ -8,12 +8,12 @@ const initialState = {
   loading: false,
   error: '',
   products: {},
+  successCreate: false,
 };
 
 export const getAllProducts = createAsyncThunk(
   'products/getAllProducts',
   async (param, thunkAPI) => {
-    console.log(thunkAPI.getState().user.token);
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
       const { data } = await request.get(`/products`, {
@@ -40,10 +40,45 @@ export const getOneProduct = createAsyncThunk(
   }
 );
 
+export const deleteProduct = createAsyncThunk(
+  'products/deleteProduct',
+  async (_id, thunkAPI) => {
+    try {
+      await request.delete(`/products/${_id}`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+      return _id;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    getOneProductById: (state, { payload }) => {
+      state.products = {
+        ...state.products,
+        [payload._id]: payload,
+      };
+    },
+    createProduct: (state, { payload }) => {
+      state.products = {
+        ...state.products,
+        [payload._id]: payload,
+      };
+    },
+    updateProduct: (state, { payload }) => {
+      state.products = {
+        ...state.products,
+        [payload._id]: payload,
+      };
+    },
+  },
 
   extraReducers: {
     [getAllProducts.pending]: (state) => {
@@ -81,7 +116,27 @@ const productsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+
+    [deleteProduct.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [deleteProduct.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      state.error = '';
+      state.loading = false;
+      state.products = _.omit(state.products, action.payload);
+      console.log(state.products);
+    },
+
+    [getOneProduct.rejected]: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
+
+export const { createProduct, getOneProductById, updateProduct } =
+  productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -2,31 +2,36 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 //Bootstrap
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap';
 import Container from 'react-bootstrap/Container';
-import Badge from 'react-bootstrap/Badge';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 import Nav from 'react-bootstrap/Nav';
 
 import {
   ShippingAddressPage,
   PaymentMethodPage,
   OrderHistoryPage,
+  ProductEditPage,
+  ProductListPage,
   PlaceOrderPage,
+  DashboardPage,
+  SettingsPage,
   ProfilePage,
   ProductPage,
-  SettingsPage,
   SignInPage,
+  SearchPage,
   SignUpPage,
+  OrderPage,
   HomePage,
   CartPage,
-  OrderPage,
+  CreateProductPage,
 } from './pages/index';
 import { signoutUser } from './redux-store/features/userSlice';
 
@@ -36,10 +41,10 @@ import {
   clearShippingAddress,
 } from './redux-store/features/cartSlice';
 import SearchBox from './components/SearchBox';
-import SearchPage from './pages/SearchPage';
+
 import { request } from './services/axios_request';
 import ProtectedRoute from './components/ProtectedRoute';
-import DashboardPage from './pages/DashboardPage';
+
 import AdminRoute from './components/AdminRoute';
 
 function App() {
@@ -190,7 +195,6 @@ function App() {
                 path="/order/:id"
                 element={
                   <ProtectedRoute>
-                    {' '}
                     <OrderPage />
                   </ProtectedRoute>
                 }
@@ -219,6 +223,31 @@ function App() {
                 element={
                   <AdminRoute>
                     <DashboardPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/product/:_id/edit"
+                element={
+                  <AdminRoute>
+                    <ProductEditPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/productlist"
+                element={
+                  <AdminRoute>
+                    <ProductListPage />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/createproduct"
+                element={
+                  <AdminRoute>
+                    <CreateProductPage />
                   </AdminRoute>
                 }
               />

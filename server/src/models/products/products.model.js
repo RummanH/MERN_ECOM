@@ -32,4 +32,25 @@ async function getOneProductBySlug(slug) {
   return await Product.findOne({ slug });
 }
 
-module.exports = { getAllProducts, getOneProductBySlug, getOneProductById };
+async function createProduct(currentProduct) {
+  return await Product.create(currentProduct);
+}
+
+async function deleteProduct(_id) {
+  return await Product.findByIdAndDelete(_id);
+}
+
+async function updateProduct(_id, currentUpdate) {
+  return await Product.findByIdAndUpdate(_id, currentUpdate, {
+    new: true,
+    runValidators: true,
+  });
+}
+module.exports = {
+  getAllProducts,
+  getOneProductBySlug,
+  getOneProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};

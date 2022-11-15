@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { MessageBox } from '../components';
 import React from 'react';
 
-//Bootstrap
 import ListGroup from 'react-bootstrap/esm/ListGroup';
 import Button from 'react-bootstrap/esm/Button';
 import Card from 'react-bootstrap/esm/Card';
