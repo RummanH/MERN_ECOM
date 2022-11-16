@@ -8,6 +8,7 @@ const {
   getAllOrders,
   updateOrder,
   deleteOrder,
+  createBookingCheckout,
 } = require('../models/orders/orders.model');
 const AppError = require('../services/AppError');
 
@@ -117,8 +118,17 @@ async function httpDeleteOrder(req, res, next) {
   return res.status(200).json({ status: 'success', data: null });
 }
 
+async function httpUpdateOrder(req, res, next) {
+  const order = await updateOrder(req.params._id, req.body);
+  if (!order) {
+    return next(new AppError('Order not found!', 404));
+  }
+
+  return res.status(200).json({ status: 'success', data: { order } });
+}
+
 async function httpCreateBookingCheckout(req, res, next) {
-  await updateOrder(req.params._id);
+  await createBookingCheckout(req.params._id);
   res.status(200).json({ status: 'success' });
 }
 
@@ -130,4 +140,5 @@ module.exports = {
   httpGetCheckoutSession,
   httpCreateBookingCheckout,
   httpDeleteOrder,
+  httpUpdateOrder,
 };

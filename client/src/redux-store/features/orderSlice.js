@@ -28,12 +28,16 @@ export const getAllOrders = createAsyncThunk(
   }
 );
 
-export const getOneProduct = createAsyncThunk(
-  'products/getOneProduct',
-  async ({ slug }, thunkAPI) => {
+export const getOneOrder = createAsyncThunk(
+  'products/getOneOrder',
+  async (_id, thunkAPI) => {
     try {
-      const { data } = await request.get(`/products/slug/${slug}`);
-      return data.data.product;
+      const { data } = await request.get(`/orders/${_id}`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+      return data.data.order;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));
     }
@@ -50,6 +54,26 @@ export const deleteOrder = createAsyncThunk(
         },
       });
       return _id;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const updateOrder = createAsyncThunk(
+  'products/updateOrder',
+  async (_id, thunkAPI) => {
+    try {
+      const { data } = await request.patch(
+        `/orders/${_id}`,
+        { isDelivered: true, deliveredAt: Date.now() },
+        {
+          headers: {
+            authorization: `Bearer ${thunkAPI.getState().user.token}`,
+          },
+        }
+      );
+      return data.data.order;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));
     }
@@ -99,20 +123,38 @@ const ordersSlice = createSlice({
       state.loading = false;
     },
 
-    [getOneProduct.pending]: (state) => {
+    [getOneOrder.pending]: (state) => {
       state.loading = true;
     },
 
-    [getOneProduct.fulfilled]: (state, action) => {
+    [getOneOrder.fulfilled]: (state, action) => {
       state.error = '';
       state.loading = false;
-      state.products = {
+      state.orders = {
+        ...state.orders,
+        [action.payload._id]: action.payload,
+      };
+    },
+
+    [getOneOrder.rejected]: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
+    [updateOrder.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [updateOrder.fulfilled]: (state, action) => {
+      state.error = '';
+      state.loading = false;
+      state.orders = {
         ...state.products,
         [action.payload._id]: action.payload,
       };
     },
 
-    [getOneProduct.rejected]: (state, action) => {
+    [updateOrder.rejected]: (state, action) => {
       state.error = action.payload;
       state.loading = false;
     },

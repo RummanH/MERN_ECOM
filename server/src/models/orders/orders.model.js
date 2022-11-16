@@ -18,11 +18,18 @@ async function deleteOrder(_id) {
   return await Order.findByIdAndDelete(_id);
 }
 
-async function updateOrder(_id) {
+async function createBookingCheckout(_id) {
   const order = await getOneOrder(_id);
   order.isPaid = true;
   order.paidAt = Date.now();
   return await order.save();
+}
+
+async function updateOrder(_id, currentUpdate) {
+  return await Order.findByIdAndUpdate(_id, currentUpdate, {
+    new: true,
+    runValidators: true,
+  });
 }
 
 module.exports = {
@@ -31,4 +38,5 @@ module.exports = {
   getAllOrders,
   updateOrder,
   deleteOrder,
+  createBookingCheckout,
 };

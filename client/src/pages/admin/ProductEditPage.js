@@ -21,16 +21,18 @@ const ProductEditPage = () => {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.user);
 
-  const [name, setName] = useState(product.name || '');
-  const [price, setPrice] = useState(product.price || '');
-  const [image, setImage] = useState(product.image || '');
-  const [category, setCategory] = useState(product.category || '');
-  const [countInStock, setCountInStock] = useState(product.countInStock || '');
-  const [brand, setBrand] = useState(product.brand || '');
-  const [description, setDescription] = useState(product.description || '');
+  const [name, setName] = useState(product ? product.name : '');
+  const [price, setPrice] = useState(product ? product.price : '');
+  const [image, setImage] = useState(product ? product.image : '');
+  const [category, setCategory] = useState(product ? product.category : '');
+  const [countInStock, setCountInStock] = useState(
+    product ? product.countInStock : ''
+  );
+  const [brand, setBrand] = useState(product ? product.brand : '');
+  const [description, setDescription] = useState(
+    product ? product.description : ''
+  );
   const [categories, setCategories] = useState([]);
-
-  console.log(category);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -58,8 +60,7 @@ const ProductEditPage = () => {
       } catch (error) {}
     };
 
-    console.log(product);
-    if (!product || product._id !== _id) {
+    if (!product) {
       fetchProduct();
     }
   }, [_id, dispatch, product]);

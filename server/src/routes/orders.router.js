@@ -8,6 +8,7 @@ const {
   httpGetOneOrder,
   httpPayOrder,
   httpDeleteOrder,
+  httpUpdateOrder,
 } = require('../controllers/orders.controller');
 const catchAsync = require('../services/catchAsync');
 
@@ -33,7 +34,8 @@ router
 router
   .route('/:_id')
   .get(catchAsync(httpGetOneOrder))
-  .delete(catchAsync(httpDeleteOrder));
+  .delete(catchAsync(httpDeleteOrder))
+  .patch(catchAsync(httpUpdateOrder));
 
 //Not RestFul
 router.route('/:_id/pay').patch(catchAsync(httpPayOrder));
