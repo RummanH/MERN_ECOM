@@ -3,6 +3,7 @@ import ShippingAddressPage from './ShippingAddressPage';
 import ProductListPage from './admin/ProductListPage';
 import ProductEditPage from './admin/ProductEditPage';
 import PaymentMethodPage from './PaymentMethodPage';
+import OrderListPage from './admin/OrderListPage';
 import DashboardPage from './admin/DashboardPage';
 import OrderHistoryPage from './OrderHistoryPage';
 import PlaceOrderPage from './PlaceOrderPage';
@@ -25,6 +26,7 @@ export {
   ProductListPage,
   PlaceOrderPage,
   DashboardPage,
+  OrderListPage,
   SettingsPage,
   ProductPage,
   ProfilePage,

@@ -7,6 +7,7 @@ const {
   getOneOrder,
   getAllOrders,
   updateOrder,
+  deleteOrder,
 } = require('../models/orders/orders.model');
 const AppError = require('../services/AppError');
 
@@ -111,6 +112,11 @@ async function httpGetCheckoutSession(req, res, next) {
   });
 }
 
+async function httpDeleteOrder(req, res, next) {
+  await deleteOrder(req.params._id);
+  return res.status(200).json({ status: 'success', data: null });
+}
+
 async function httpCreateBookingCheckout(req, res, next) {
   await updateOrder(req.params._id);
   res.status(200).json({ status: 'success' });
@@ -123,4 +129,5 @@ module.exports = {
   httpGetAllOrders,
   httpGetCheckoutSession,
   httpCreateBookingCheckout,
+  httpDeleteOrder,
 };

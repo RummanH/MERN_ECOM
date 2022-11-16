@@ -9,10 +9,13 @@ async function getOneOrder(_id) {
 }
 
 async function getAllOrders(userId) {
-  console.log(userId);
   let filter = {};
   if (userId) filter = { user: userId };
-  return await Order.find(filter);
+  return await Order.find(filter).populate('user');
+}
+
+async function deleteOrder(_id) {
+  return await Order.findByIdAndDelete(_id);
 }
 
 async function updateOrder(_id) {
@@ -22,4 +25,10 @@ async function updateOrder(_id) {
   return await order.save();
 }
 
-module.exports = { createOrder, getOneOrder, getAllOrders, updateOrder };
+module.exports = {
+  createOrder,
+  getOneOrder,
+  getAllOrders,
+  updateOrder,
+  deleteOrder,
+};

@@ -32,6 +32,7 @@ import {
   HomePage,
   CartPage,
   CreateProductPage,
+  OrderListPage,
 } from './pages/index';
 import { signoutUser } from './redux-store/features/userSlice';
 
@@ -245,6 +246,15 @@ function App() {
                 element={
                   <AdminRoute>
                     <CreateProductPage />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/orderlist"
+                element={
+                  <AdminRoute>
+                    <OrderListPage />
                   </AdminRoute>
                 }
               />
