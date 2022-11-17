@@ -6,6 +6,8 @@ import PaymentMethodPage from './PaymentMethodPage';
 import OrderListPage from './admin/OrderListPage';
 import DashboardPage from './admin/DashboardPage';
 import OrderHistoryPage from './OrderHistoryPage';
+import UserListPage from './admin/UserListPage';
+import UserEditPage from './admin/UserEditPage';
 import PlaceOrderPage from './PlaceOrderPage';
 import SettingsPage from './SettingsPage';
 import ProfilePage from './ProfilePage';
@@ -28,6 +30,8 @@ export {
   DashboardPage,
   OrderListPage,
   SettingsPage,
+  UserEditPage,
+  UserListPage,
   ProductPage,
   ProfilePage,
   SignInPage,

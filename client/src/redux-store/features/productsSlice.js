@@ -129,7 +129,7 @@ const productsSlice = createSlice({
       toast.success('Product Deleted!');
     },
 
-    [getOneProduct.rejected]: (state, action) => {
+    [deleteProduct.rejected]: (state, action) => {
       state.error = action.payload;
       state.loading = false;
       toast.error(action.payload);

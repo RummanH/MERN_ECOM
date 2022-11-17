@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
@@ -15,6 +16,7 @@ const initialState = {
   token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
   loading: false,
   error: '',
+  users: {},
 };
 
 export const signupUser = createAsyncThunk(
@@ -90,10 +92,56 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+export const getAllUsers = createAsyncThunk(
+  'products/getAllUsers',
+  async (param, thunkAPI) => {
+    //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
+    try {
+      const { data } = await request.get(`/users`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+      return data.data.users;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const getOneUser = createAsyncThunk(
+  'products/getOneUser',
+  async (_id, thunkAPI) => {
+    console.log(_id);
+    try {
+      const { data } = await request.get(`/users/${_id}`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+
+      return data.data.user;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    updateUser: (state, { payload }) => {
+      console.log(payload);
+      state.users = {
+        ...state.users,
+        [payload._id]: payload,
+      };
+    },
+
+    deleteUser: (state, { payload }) => {
+      state.users = _.omit(state.users, payload);
+    },
     signoutUser: (state) => {
       state.user = null;
       state.token = null;
@@ -102,6 +150,42 @@ const userSlice = createSlice({
     },
   },
   extraReducers: {
+    [getAllUsers.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [getAllUsers.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.error = '';
+      state.users = {
+        ...state.users,
+        ..._.mapKeys(action.payload, '_id'),
+      };
+    },
+
+    [getAllUsers.rejected]: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
+    [getOneUser.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [getOneUser.fulfilled]: (state, action) => {
+      state.error = '';
+      state.loading = false;
+      state.users = {
+        ...state.users,
+        [action.payload._id]: action.payload,
+      };
+    },
+
+    [getOneUser.rejected]: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
     [signupUser.pending]: (state) => {
       state.loading = true;
     },
@@ -180,6 +264,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { signoutUser } = userSlice.actions;
+export const { signoutUser, updateUser, deleteUser } = userSlice.actions;
 
 export default userSlice.reducer;

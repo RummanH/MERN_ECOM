@@ -305,18 +305,20 @@ const OrderPage = () => {
                       {loadingPay && <LoadingBox></LoadingBox>}
                     </ListGroup.Item>
                   )}
-                  {user.role === 'admin' && order.isPaid && !order.isDelivered && (
-                    <ListGroup.Item>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={() => handleDeliver(order._id)}
-                        >
-                          Deliver Order
-                        </Button>
-                      </div>
-                    </ListGroup.Item>
-                  )}
+                  {user.roles.includes('admin') &&
+                    order.isPaid &&
+                    !order.isDelivered && (
+                      <ListGroup.Item>
+                        <div className="d-grid">
+                          <Button
+                            type="button"
+                            onClick={() => handleDeliver(order._id)}
+                          >
+                            Deliver Order
+                          </Button>
+                        </div>
+                      </ListGroup.Item>
+                    )}
                 </ListGroup>
               </Card.Body>
             </Card>

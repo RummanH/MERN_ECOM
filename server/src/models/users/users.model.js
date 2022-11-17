@@ -49,6 +49,38 @@ async function updateMe(_id, currentUpdate) {
   });
 }
 
+async function updateUser(_id, currentUpdate) {
+  const user = await User.findById(_id);
+
+  if (currentUpdate.isAdmin && !user.roles.includes('admin')) {
+    user.roles.push('admin');
+  }
+
+  if (!currentUpdate.isAdmin && user.roles.includes('admin')) {
+    return 'admin';
+  }
+
+  if (currentUpdate.isSeller && !user.roles.includes('seller')) {
+    user.roles.push('seller');
+  }
+
+  if (!currentUpdate.isSeller && user.roles.includes('seller')) {
+    user.roles = user.roles.filter((r) => r !== 'seller');
+  }
+  user.name = currentUpdate.name;
+  user.email = currentUpdate.email;
+  return await user.save();
+}
+
+async function deleteUser(_id) {
+  const user = await User.findById(_id);
+
+  if (user && user.roles.includes('admin')) {
+    return 'admin';
+  }
+  return await User.findByIdAndDelete(_id);
+}
+
 module.exports = {
   saveUser,
   getAllUsers,
@@ -56,4 +88,6 @@ module.exports = {
   getOneUserByEmail,
   getOneUserByToken,
   updateMe,
+  updateUser,
+  deleteUser,
 };

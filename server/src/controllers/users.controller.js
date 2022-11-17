@@ -2,6 +2,8 @@ const {
   getAllUsers,
   getOneUserById,
   updateMe,
+  updateUser,
+  deleteUser,
 } = require('../models/users/users.model');
 const AppError = require('../services/AppError');
 
@@ -19,6 +21,8 @@ function bodyFilter(candidateObj, ...allowed) {
 async function httpGetOneUser(req, res, next) {
   const user = await getOneUserById(req.params._id);
 
+  console.log(req.params._id);
+
   if (!user) {
     return next(new AppError('User not found!', 404));
   }
@@ -32,6 +36,18 @@ async function httpGetAllUsers(req, res, next) {
   return res
     .status(200)
     .json({ status: 'success', results: users.length, data: { users } });
+}
+
+async function httpUpdateUser(req, res, next) {
+  const user = await updateUser(req.params._id, req.body);
+
+  if (user === 'admin') {
+    return next(new AppError("Sorry you can't change role of an admin!", 400));
+  }
+  if (!user) {
+    return next(new AppError('User not found!', 404));
+  }
+  return res.status(200).json({ status: 'success', data: { user } });
 }
 
 async function httpUpdateMe(req, res, next) {
@@ -61,4 +77,19 @@ async function httpUpdateMe(req, res, next) {
   });
 }
 
-module.exports = { httpGetOneUser, httpGetAllUsers, httpUpdateMe };
+async function httpDeleteUser(req, res, next) {
+  const user = await deleteUser(req.params._id);
+
+  if (user === 'admin') {
+    return next(new AppError("Sorry you can't delete an admin", 403));
+  }
+  return res.status(204).json({ status: 'success', data: null });
+}
+
+module.exports = {
+  httpGetOneUser,
+  httpGetAllUsers,
+  httpUpdateMe,
+  httpUpdateUser,
+  httpDeleteUser,
+};

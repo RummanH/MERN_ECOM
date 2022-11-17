@@ -9,6 +9,8 @@ const {
   httpUpdateMe,
   httpGetAllUsers,
   httpGetOneUser,
+  httpUpdateUser,
+  httpDeleteUser,
 } = require('../controllers/users.controller');
 
 const orderRouter = require('./orders.router');
@@ -30,6 +32,10 @@ router.patch('/updateMe', catchAsync(httpUpdateMe));
 
 //RESTFul
 router.route('/').get(catchAsync(httpGetAllUsers));
-router.route('/:id').get(catchAsync(httpGetOneUser));
+router
+  .route('/:_id')
+  .get(catchAsync(httpGetOneUser))
+  .patch(catchAsync(httpProtect), catchAsync(httpUpdateUser))
+  .delete(catchAsync(httpProtect), catchAsync(httpDeleteUser));
 
 module.exports = router;

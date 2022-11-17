@@ -33,6 +33,8 @@ import {
   CartPage,
   CreateProductPage,
   OrderListPage,
+  UserListPage,
+  UserEditPage,
 } from './pages/index';
 import { signoutUser } from './redux-store/features/userSlice';
 
@@ -132,7 +134,7 @@ function App() {
                       Sign In
                     </Link>
                   )}
-                  {user && user.role === 'admin' && (
+                  {user && user.roles.includes('admin') && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
@@ -229,6 +231,23 @@ function App() {
                 element={
                   <AdminRoute>
                     <ProductEditPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/userlist"
+                element={
+                  <AdminRoute>
+                    <UserListPage />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/user/:_id/edit"
+                element={
+                  <AdminRoute>
+                    <UserEditPage />
                   </AdminRoute>
                 }
               />

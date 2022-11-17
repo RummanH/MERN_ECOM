@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema(
       default: 'https://gravatar.com/avatar/3385a4b3c13baa8a700cb41a27ef87c1',
     },
 
-    role: {
-      type: String,
-      default: 'user',
+    roles: {
+      type: Array,
+      default: ['user'],
     },
 
     isActive: {
