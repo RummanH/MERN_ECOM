@@ -1,4 +1,5 @@
 const { Router } = require('express');
+
 const { httpProtect } = require('../controllers/auth.controller');
 const {
   httpGetCheckoutSession,
@@ -6,13 +7,15 @@ const {
   httpCreateOrder,
   httpGetAllOrders,
   httpGetOneOrder,
-  httpPayOrder,
   httpDeleteOrder,
   httpUpdateOrder,
+  httpPayWithPayPal,
 } = require('../controllers/orders.controller');
 const catchAsync = require('../services/catchAsync');
 
 const router = Router({ mergeParams: true });
+
+//Not RestFul
 
 router.get(
   '/checkout-session/:orderId',
@@ -25,7 +28,10 @@ router.get(
   catchAsync(httpProtect),
   catchAsync(httpCreateBookingCheckout)
 );
-//From this point all route is protected
+
+router.route('/:_id/pay').patch(catchAsync(httpPayWithPayPal));
+
+// RestFul
 router.use(catchAsync(httpProtect));
 router
   .route('/')
@@ -34,10 +40,7 @@ router
 router
   .route('/:_id')
   .get(catchAsync(httpGetOneOrder))
-  .delete(catchAsync(httpDeleteOrder))
-  .patch(catchAsync(httpUpdateOrder));
-
-//Not RestFul
-router.route('/:_id/pay').patch(catchAsync(httpPayOrder));
+  .patch(catchAsync(httpUpdateOrder))
+  .delete(catchAsync(httpDeleteOrder));
 
 module.exports = router;

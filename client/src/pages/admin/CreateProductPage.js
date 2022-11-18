@@ -10,7 +10,7 @@ import Form from 'react-bootstrap/esm/Form';
 import { createProduct } from '../../redux-store/features/productsSlice';
 import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
-import { FormRow } from '../../components';
+import { FormRow, LoadingBox, MessageBox } from '../../components';
 
 const CreateProductPage = () => {
   const { token } = useSelector((state) => state.user);
@@ -25,6 +25,29 @@ const CreateProductPage = () => {
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
   const [categories, setCategories] = useState([]);
+
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [errorUpload, setErrorUpload] = useState('');
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyFromData = new FormData();
+    bodyFromData.append('image', file);
+    try {
+      setLoadingUpload(true);
+      const { data } = await request.post('/uploads', bodyFromData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Bearer ${token}`,
+        },
+      });
+      setLoadingUpload(false);
+      setImage(data.data.image);
+    } catch (err) {
+      setErrorUpload(getError(err));
+      setLoadingUpload(false);
+    }
+  };
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -82,16 +105,31 @@ const CreateProductPage = () => {
           value={price}
         />
 
-        <FormRow
-          controlId="image"
-          labelText="Image"
-          type="text"
-          name="image"
-          handleChange={(e) => setImage(e.target.value)}
-          value={image}
-        />
+        <div>
+          <FormRow
+            controlId="image"
+            labelText="Image"
+            type="text"
+            name="image"
+            value={image}
+          />
 
-        <label style={{ marginBottom: '7px' }}>Select a category</label>
+          <label htmlFor="imageFile">Image File</label>
+          <Form.Control
+            type="file"
+            id="imageFile"
+            label="Choose Image"
+            onChange={uploadFileHandler}
+          />
+          {loadingUpload && <LoadingBox />}
+          {errorUpload && (
+            <MessageBox variant="danger">{errorUpload}</MessageBox>
+          )}
+        </div>
+
+        <label style={{ marginBottom: '7px', marginTop: '15px' }}>
+          Select a category
+        </label>
         <select
           onChange={(e) => setCategory(e.target.value)}
           className="form-select"

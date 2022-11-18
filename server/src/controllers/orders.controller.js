@@ -1,6 +1,4 @@
-const stripe = require('stripe')(
-  'sk_test_51Ltb6YAGTu4kgviAWqSJUfApaC8xx9r6409guRcArLuYneQ9x88RCynR6krioxWwufiOqpjxLfhBT6eLcYnYj00400CXf66XHi'
-);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const {
   createOrder,
@@ -8,7 +6,7 @@ const {
   getAllOrders,
   updateOrder,
   deleteOrder,
-  createBookingCheckout,
+  payOrder,
 } = require('../models/orders/orders.model');
 const AppError = require('../services/AppError');
 
@@ -32,6 +30,13 @@ async function httpCreateOrder(req, res, next) {
   });
 }
 
+async function httpGetAllOrders(req, res, next) {
+  const orders = await getAllOrders(req.params.userId);
+  return res
+    .status(200)
+    .json({ status: 'success', results: orders.length, data: { orders } });
+}
+
 async function httpGetOneOrder(req, res, next) {
   const order = await getOneOrder(req.params._id);
 
@@ -42,41 +47,22 @@ async function httpGetOneOrder(req, res, next) {
   return res.status(200).json({ status: 'success', data: { order } });
 }
 
-async function httpPayOrder(req, res, next) {
-  const order = await getOneOrder(req.params._id);
+async function httpUpdateOrder(req, res, next) {
+  const order = await updateOrder(req.params._id, req.body);
   if (!order) {
-    return next(new AppError('No order found', 404));
+    return next(new AppError('Order not found!', 404));
   }
 
-  order.isPaid = true;
-  order.paidAt = Date.now();
-  order.paymentResult = {
-    id: req.body.id,
-    status: req.body.status,
-    update_time: req.body.update_time,
-    email_address: req.body.email_address,
-  };
-
-  await order.save();
-
-  res.status(200).json({
-    status: 'success',
-    message: 'Order paid',
-    data: {
-      order,
-    },
-  });
+  return res.status(200).json({ status: 'success', data: { order } });
 }
 
-async function httpGetAllOrders(req, res, next) {
-  const orders = await getAllOrders(req.params.userId);
-  return res
-    .status(200)
-    .json({ status: 'success', results: orders.length, data: { orders } });
+async function httpDeleteOrder(req, res, next) {
+  await deleteOrder(req.params._id);
+  return res.status(200).json({ status: 'success', data: null });
 }
 
 async function httpGetCheckoutSession(req, res, next) {
-  const order = await getOneOrder({ _id: req.params.orderId });
+  const order = await getOneOrder(req.params.orderId);
 
   const items = order.orderItems.map((x) => {
     return {
@@ -86,9 +72,7 @@ async function httpGetCheckoutSession(req, res, next) {
         product_data: {
           name: x.name,
           description: x.description,
-          images: [
-            'https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1597763166-41CRnvYqmqL.jpg?crop=1xw:1.00xh;center,top&resize=480:*',
-          ],
+          images: [x.image],
         },
       },
 
@@ -102,7 +86,6 @@ async function httpGetCheckoutSession(req, res, next) {
     cancel_url: `http://localhost:3000/order/${req.params.orderId}/false`,
     customer_email: req.user.email,
     client_reference_id: req.params.orderId,
-    shipping_address_collection: { allowed_countries: ['US', 'CA'] },
     mode: 'payment',
     line_items: items,
   });
@@ -113,32 +96,33 @@ async function httpGetCheckoutSession(req, res, next) {
   });
 }
 
-async function httpDeleteOrder(req, res, next) {
-  await deleteOrder(req.params._id);
-  return res.status(200).json({ status: 'success', data: null });
+async function httpCreateBookingCheckout(req, res, next) {
+  const order = await payOrder(req.params._id);
+  res.status(200).json({ status: 'success', data: { order } });
 }
 
-async function httpUpdateOrder(req, res, next) {
-  const order = await updateOrder(req.params._id, req.body);
+async function httpPayWithPayPal(req, res, next) {
+  const order = await payOrder(req.params._id);
   if (!order) {
     return next(new AppError('Order not found!', 404));
   }
 
-  return res.status(200).json({ status: 'success', data: { order } });
-}
-
-async function httpCreateBookingCheckout(req, res, next) {
-  await createBookingCheckout(req.params._id);
-  res.status(200).json({ status: 'success' });
+  return res.status(200).json({
+    status: 'success',
+    message: 'Order paid',
+    data: {
+      order,
+    },
+  });
 }
 
 module.exports = {
   httpCreateOrder,
-  httpGetOneOrder,
-  httpPayOrder,
   httpGetAllOrders,
-  httpGetCheckoutSession,
-  httpCreateBookingCheckout,
-  httpDeleteOrder,
+  httpGetOneOrder,
   httpUpdateOrder,
+  httpDeleteOrder,
+  httpCreateBookingCheckout,
+  httpGetCheckoutSession,
+  httpPayWithPayPal,
 };

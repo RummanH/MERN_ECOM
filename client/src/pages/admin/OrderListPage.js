@@ -15,8 +15,12 @@ const OrderListPage = () => {
   const { orders, loading, error } = useSelector((state) => state.orders);
   const allOrders = Object.values(orders);
 
-  const handleDelete = (_id) => {
-    if (window.confirm('Are you sure?')) dispatch(deleteOrder(_id));
+  const handleDelete = async (_id) => {
+    try {
+      await dispatch(deleteOrder(_id)).unwrap();
+    } catch (err) {}
+
+    console.log(error);
     return;
   };
 
@@ -53,7 +57,7 @@ const OrderListPage = () => {
                   return (
                     <tr key={order._id}>
                       <td>{order._id}</td>
-                      <td>{order.user.name ? order.user.name : ''}</td>
+                      <td>{order.user ? order.user.name : ''}</td>
                       <td>{order.createdAt.substring(0, 10)}</td>
                       <td>{order.totalPrice.toFixed(2)}</td>
                       <td>

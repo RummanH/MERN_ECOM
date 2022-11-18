@@ -7,6 +7,7 @@ const {
   deleteProduct,
 } = require('../models/products/products.model');
 const AppError = require('../services/AppError');
+const { getObject } = require('../services/S3Client');
 
 async function httpCreateProduct(req, res, next) {
   if (!req.body.category) {
@@ -19,6 +20,10 @@ async function httpCreateProduct(req, res, next) {
 
 async function httpGetAllProducts(req, res, next) {
   const products = await getAllProducts(req.query);
+  for (const product of products) {
+    product.image = await getObject(product.image);
+  }
+
   return res.status(200).json({
     status: 'success',
     results: products.length,
