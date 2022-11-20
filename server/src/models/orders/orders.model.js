@@ -1,13 +1,19 @@
+const ApiFeatures = require('../../services/ApiFeatures');
 const Order = require('./orders.mongo');
 
 async function createOrder(currentOrder) {
   return await Order.create(currentOrder);
 }
 
-async function getAllOrders(userId) {
+async function getAllOrders(userId, queryString) {
   let filter = {};
   if (userId) filter = { user: userId };
-  return await Order.find(filter).populate('user');
+  const features = new ApiFeatures(Order.find(filter), queryString)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  return await features.query;
 }
 
 async function getOneOrder(_id) {

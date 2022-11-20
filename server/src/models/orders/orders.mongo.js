@@ -16,6 +16,12 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
+
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     shippingAddress: {
       fullName: { type: String, required: [true, 'Full name is required'] },
       address: { type: String, required: [true, 'address is required'] },

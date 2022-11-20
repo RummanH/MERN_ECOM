@@ -48,8 +48,6 @@ const OrderPage = () => {
     Object.values(state.orders.orders).find((o) => o._id === orderId)
   );
 
-  console.log(order);
-
   const handleDeliver = (_id) => {
     reduxDispatch(updateOrder(_id));
   };

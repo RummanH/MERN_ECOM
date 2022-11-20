@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import { addItem, increase } from '../redux-store/features/cartSlice';
 import { request } from '../services/axios_request';
 import Rating from './Rating';
+import Row from 'react-bootstrap/esm/Row';
 
 const Product = ({ product }) => {
   const dispatch = useDispatch();
@@ -45,7 +46,14 @@ const Product = ({ product }) => {
           <Card.Title>{product.name}</Card.Title>
           <Rating rating={product.rating} numReviews={product.numReviews} />
         </Link>
-        <Card.Text>${product.price}</Card.Text>
+
+        <Row>
+          <Card.Text>${product.price}</Card.Text>
+          <Link to={`/seller/${product.seller._id}`}>
+            {product.seller.name}
+          </Link>
+        </Row>
+
         {product.countInStock === 0 ? (
           <Button variant="light">Out of stock</Button>
         ) : (

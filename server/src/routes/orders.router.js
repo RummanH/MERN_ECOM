@@ -10,6 +10,7 @@ const {
   httpDeleteOrder,
   httpUpdateOrder,
   httpPayWithPayPal,
+  httpAddFields,
 } = require('../controllers/orders.controller');
 const catchAsync = require('../services/catchAsync');
 
@@ -42,5 +43,9 @@ router
   .get(catchAsync(httpGetOneOrder))
   .patch(catchAsync(httpUpdateOrder))
   .delete(catchAsync(httpDeleteOrder));
+
+// TEST AGGREGATION
+
+router.route('/test/fields').get(catchAsync(httpAddFields));
 
 module.exports = router;

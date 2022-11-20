@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, 'Please provide valid email'],
     },
+    seller: {
+      name: String,
+      logo: String,
+      description: String,
+      rating: { type: Number },
+      numReview: { type: Number },
+    },
     password: {
       type: String,
       minlength: [8, 'Password must be at least 8 characters'],

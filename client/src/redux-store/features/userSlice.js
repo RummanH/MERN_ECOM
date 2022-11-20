@@ -53,6 +53,7 @@ export const loginUser = createAsyncThunk(
 export const updateMe = createAsyncThunk(
   'user/updateMe',
   async (currentUpdate, thunkAPI) => {
+    console.log(currentUpdate);
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
       const { data } = await request.patch(`/users/updateMe`, currentUpdate, {

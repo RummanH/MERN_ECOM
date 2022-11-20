@@ -13,14 +13,17 @@ const initialState = {
 
 export const getAllOrders = createAsyncThunk(
   'products/getAllOrders',
-  async (param, thunkAPI) => {
+  async (seller, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await request.get(`/orders`, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.token}`,
-        },
-      });
+      const { data } = await request.get(
+        `/orders?seller=${seller ? seller : ''}`,
+        {
+          headers: {
+            authorization: `Bearer ${thunkAPI.getState().user.token}`,
+          },
+        }
+      );
       return data.data.orders;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));

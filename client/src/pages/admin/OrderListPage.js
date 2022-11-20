@@ -9,11 +9,22 @@ import {
   getAllOrders,
 } from '../../redux-store/features/orderSlice';
 
-const OrderListPage = () => {
+const OrderListPage = (props) => {
+  const sellerMode = window.location.href.includes('/seller');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { orders, loading, error } = useSelector((state) => state.orders);
-  const allOrders = Object.values(orders);
+  const { user } = useSelector((state) => state.user);
+
+  let allOrders;
+  if (sellerMode) {
+    allOrders = Object.values(orders).filter((o) => {
+      return o.seller === user._id;
+    });
+  } else {
+    allOrders = Object.values(orders);
+  }
 
   const handleDelete = async (_id) => {
     try {
@@ -25,8 +36,8 @@ const OrderListPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllOrders());
-  }, [dispatch]);
+    dispatch(getAllOrders(sellerMode ? user._id : ''));
+  }, [dispatch, user, sellerMode]);
   return (
     <div>
       {loading ? (

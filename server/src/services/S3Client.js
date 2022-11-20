@@ -1,5 +1,5 @@
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-// const AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
 
 const multer = require('multer');
 const sharp = require('sharp');
@@ -12,18 +12,19 @@ const {
 } = require('@aws-sdk/client-s3');
 const AppError = require('./AppError');
 
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-  },
+// const s3 = new S3Client({
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_KEY,
+//   },
+//   region: process.env.AWS_BUCKET_REGION,
+// });
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
   region: process.env.AWS_BUCKET_REGION,
 });
-
-// const s3 = new AWS.S3({
-//   accessKeyId: process.env.AWS_ACCESS_KEY,
-//   secretAccessKey: process.env.AWS_SECRET_KEY,
-// });
 
 //Multer Related
 const storage = multer.memoryStorage();
@@ -41,7 +42,7 @@ exports.resizeProductPhoto = async (req, res, next) => {
   }
   req.contentType = req.file.mimetype.split('/')[0];
   req.buffer = await sharp(req.file.buffer)
-    .resize(400, 400)
+    .resize(500, 400)
     .toFormat('jpeg')
     .jpeg({
       quality: 90,
@@ -56,34 +57,18 @@ exports.uploadPhotoToS3 = async (req, res, next) => {
     return next(new AppError('There is no file to upload!', 400));
   }
 
-  const image = `${req.user.id}-${Date.now() * Math.random()}`;
+  const image = `${req.user.id}-${Date.now() * Math.random()}.jpeg`;
 
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: image,
-    Body: req.buffer,
-    ContentType: req.contentType,
-  };
-  const command = new PutObjectCommand(params);
-  const url = await s3.send(command);
+  const { Location } = await s3
+    .upload({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: image,
+      Body: req.buffer,
+      ContentType: req.contentType,
+    })
+    .promise();
 
-  console.log(url.location);
-
-  return res.status(200).json({ status: 'success', data: { image } });
-
-  // console.log(req.contentType);
-
-  // const result = await s3
-  //   .upload({
-  //     Bucket: process.env.AWS_BUCKET_NAME,
-  //     Key: image,
-  //     Body: req.buffer,
-  //     ACL: 'public-read',
-  //     ContentType: req.contentType,
-  //   })
-  //   .promise();
-
-  // console.log(result);
+  return res.status(200).json({ status: 'success', data: { image: Location } });
 };
 
 exports.uploadVideoToS3 = async (req, res, next) => {

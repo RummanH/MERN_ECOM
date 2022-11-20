@@ -9,14 +9,30 @@ const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const [values, setValue] = useState({ name: user.name, email: user.email });
+  const [values, setValue] = useState({
+    name: user.name,
+    email: user.email,
+    sellerName: user.seller ? user.seller.name : '',
+    sellerLogo: user.seller ? user.seller.logo : '',
+    description: user.seller ? user.seller.description : '',
+  });
   const handleChange = (e) => {
     setValue({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateMe({ name: values.name, email: values.email }));
+    dispatch(
+      updateMe({
+        name: values.name,
+        email: values.email,
+        seller: {
+          name: values.sellerName,
+          logo: values.sellerLogo,
+          description: values.description,
+        },
+      })
+    );
   };
 
   return (
@@ -43,6 +59,38 @@ const ProfilePage = () => {
           handleChange={handleChange}
           value={values.email}
         />
+
+        {user.roles.includes('seller') && (
+          <>
+            <h2>Seller</h2>
+            <FormRow
+              controlId="sellerName"
+              labelText="Seller Name"
+              type="text"
+              name="sellerName"
+              handleChange={handleChange}
+              value={values.sellerName}
+            />
+
+            <FormRow
+              controlId="sellerLogo"
+              labelText="Seller Logo"
+              type="text"
+              name="sellerLogo"
+              handleChange={handleChange}
+              value={values.sellerLogo}
+            />
+
+            <FormRow
+              controlId="sellerDescription"
+              labelText="Seller Description"
+              type="text"
+              name="description"
+              handleChange={handleChange}
+              value={values.description}
+            />
+          </>
+        )}
 
         <div className="mb-3">
           <Button type="submit">Update</Button>

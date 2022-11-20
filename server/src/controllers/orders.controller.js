@@ -1,5 +1,9 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+const _ = require('lodash');
+
+const Order = require('../models/orders/orders.mongo');
+
 const {
   createOrder,
   getOneOrder,
@@ -20,6 +24,7 @@ async function httpCreateOrder(req, res, next) {
     taxPrice: req.body.taxPrice,
     totalPrice: req.body.totalPrice,
     user: req.user._id,
+    seller: req.body.orderItems[0].seller,
   });
 
   res.status(201).json({
@@ -31,7 +36,15 @@ async function httpCreateOrder(req, res, next) {
 }
 
 async function httpGetAllOrders(req, res, next) {
-  const orders = await getAllOrders(req.params.userId);
+  if (!req.query.seller) {
+    req.query = _.omit(req.query, 'seller');
+  }
+
+  console.log(req.query);
+
+  const orders = await getAllOrders(req.params.userId, req.query);
+
+  console.log(orders.length);
   return res
     .status(200)
     .json({ status: 'success', results: orders.length, data: { orders } });
@@ -116,6 +129,54 @@ async function httpPayWithPayPal(req, res, next) {
   });
 }
 
+//TEST AGGREGATION ----------------------
+
+async function httpAddFields(req, res, next) {
+  // const result = await Order.aggregate([
+  //   {
+  //     $addFields: {
+  //       numOrders: {
+  //         $add: ['$itemsPrice', '$shippingPrice', '$taxPrice'],
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $addFields: {
+  //       'orderItems.numItems': 'ok',
+  //     },
+  //   },
+  // ]);
+
+  // console.log(result[0].orderItems);
+
+  // const result = await Order.aggregate([
+  //   {
+  //     $bucket: {
+  //       groupBy: '$totalPrice',
+  //       boundaries: [1, 25, 60, 100],
+  //       default: 'Others',
+  //     },
+  //   },
+  // ]);
+
+  const result = await Order.aggregate([
+    {
+      $group: {
+        _id: '$user',
+        count: { $count: {} },
+        avgBuy: {
+          $avg: {
+            $multiply: ['$totalPrice', '$count'],
+          },
+        },
+      },
+    },
+  ]);
+
+  console.log(result);
+  res.send('k');
+}
+
 module.exports = {
   httpCreateOrder,
   httpGetAllOrders,
@@ -125,4 +186,5 @@ module.exports = {
   httpCreateBookingCheckout,
   httpGetCheckoutSession,
   httpPayWithPayPal,
+  httpAddFields,
 };

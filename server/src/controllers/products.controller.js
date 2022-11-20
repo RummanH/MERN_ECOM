@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const {
   createProduct,
   getAllProducts,
@@ -7,22 +9,26 @@ const {
   deleteProduct,
 } = require('../models/products/products.model');
 const AppError = require('../services/AppError');
-const { getObject } = require('../services/S3Client');
 
 async function httpCreateProduct(req, res, next) {
   if (!req.body.category) {
     return next(new AppError('Please select a category!', 404));
   }
+
+  req.body.seller = req.user._id;
   const product = await createProduct(req.body);
 
   return res.status(201).json({ status: 'success', data: { product } });
 }
 
 async function httpGetAllProducts(req, res, next) {
-  const products = await getAllProducts(req.query);
-  for (const product of products) {
-    product.image = await getObject(product.image);
+  if (!req.query.seller) {
+    req.query = _.omit(req.query, 'seller');
   }
+
+  console.log(req.query);
+
+  const products = await getAllProducts(req.query);
 
   return res.status(200).json({
     status: 'success',

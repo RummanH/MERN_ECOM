@@ -9,12 +9,23 @@ import {
   getAllProducts,
 } from '../../redux-store/features/productsSlice';
 
-const ProductListPage = () => {
+const ProductListPage = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  const sellerMode = window.location.href.includes('/seller');
 
   const { products, loading, error } = useSelector((state) => state.products);
-  const allProducts = Object.values(products);
+
+  let allProducts;
+  if (sellerMode) {
+    allProducts = Object.values(products).filter((p) => {
+      return p.seller._id === user._id;
+    });
+  } else {
+    allProducts = Object.values(products);
+  }
 
   const handleDelete = (_id) => {
     if (window.confirm('Are you sure?')) dispatch(deleteProduct(_id));
@@ -22,16 +33,13 @@ const ProductListPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllProducts());
-  }, [dispatch]);
+    dispatch(getAllProducts(sellerMode ? user._id : ''));
+  }, [dispatch, sellerMode, user]);
   return (
     <div>
       <Row>
         <h1>Products</h1>
-        <Button
-          variant="primary"
-          onClick={() => navigate('/admin/createproduct')}
-        >
+        <Button variant="primary" onClick={() => navigate('/createproduct')}>
           Create Product
         </Button>
       </Row>
@@ -54,35 +62,34 @@ const ProductListPage = () => {
             </tr>
           </thead>
           <tbody>
-            {allProducts.map((product) => (
-              <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.category.name}</td>
-                <td>{product.brand}</td>
-                <td>{product.countInStock}</td>
-                <td>
-                  <Button
-                    variant="primary"
-                    type="button"
-                    onClick={() =>
-                      navigate(`/admin/product/${product._id}/edit`)
-                    }
-                    style={{ marginRight: '5px' }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="light"
-                    type="button"
-                    onClick={() => handleDelete(product._id)}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {allProducts &&
+              allProducts.map((product) => (
+                <tr key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category.name}</td>
+                  <td>{product.brand}</td>
+                  <td>{product.countInStock}</td>
+                  <td>
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => navigate(`/product/${product._id}/edit`)}
+                      style={{ marginRight: '5px' }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="light"
+                      type="button"
+                      onClick={() => handleDelete(product._id)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       )}

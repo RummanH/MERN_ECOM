@@ -64,7 +64,13 @@ async function httpUpdateMe(req, res, next) {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = bodyFilter(req.body, 'name', 'email', 'thumbnail');
+  const filteredBody = bodyFilter(
+    req.body,
+    'name',
+    'email',
+    'thumbnail',
+    'seller'
+  );
 
   // 3) Update user document
   const user = await updateMe(req.user._id, filteredBody);

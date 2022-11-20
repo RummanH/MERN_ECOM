@@ -76,6 +76,9 @@ const SearchPage = () => {
   const page = sp.get('page') || 1;
 
   const [categories, setCategories] = useState([]);
+  const categoryTxt = categories
+    ? categories.find((ct) => ct._id === category)
+    : '';
 
   const [{ loading, error, products, pages, results }, dispatch] = useReducer(
     reducer,
@@ -228,7 +231,7 @@ const SearchPage = () => {
                   <div>
                     {results === 0 ? 'No' : results} Results
                     {query !== 'all' && ' Search : ' + query}
-                    {category !== 'all' && ' Category : ' + category}
+                    {category !== 'all' && ' Category : ' + categoryTxt.name}
                     {price !== 'all' && ' : Price ' + price}
                     {rating !== 'all' && ' Rating ' + rating + ' & up'}
                     {query !== 'all' ||

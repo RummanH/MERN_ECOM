@@ -46,6 +46,9 @@ import {
 
 import { request } from './services/axios_request';
 import { AdminRoute, ProtectedRoute, SearchBox } from './components';
+import SellerRoute from './components/SellerRoute';
+import AdminAndSeller from './components/AdminAndSeller';
+import SellerPage from './pages/SellerPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -134,6 +137,16 @@ function App() {
                       Sign In
                     </Link>
                   )}
+                  {user && user.roles.includes('seller') && (
+                    <NavDropdown title="Seller" id="seller-nav-dropdown">
+                      <LinkContainer to="/seller/productlist">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/seller/orderlist">
+                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
                   {user && user.roles.includes('admin') && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/dashboard">
@@ -218,6 +231,8 @@ function App() {
               />
               <Route path="/setting" element={<SettingsPage />} />
 
+              <Route path="/seller/:sellerId" element={<SellerPage />} />
+
               <Route
                 path="/admin/dashboard"
                 element={
@@ -227,11 +242,11 @@ function App() {
                 }
               />
               <Route
-                path="/admin/product/:_id/edit"
+                path="/product/:_id/edit"
                 element={
-                  <AdminRoute>
+                  <AdminAndSeller>
                     <ProductEditPage />
-                  </AdminRoute>
+                  </AdminAndSeller>
                 }
               />
               <Route
@@ -246,9 +261,9 @@ function App() {
               <Route
                 path="/admin/user/:_id/edit"
                 element={
-                  <AdminRoute>
+                  <AdminAndSeller>
                     <UserEditPage />
-                  </AdminRoute>
+                  </AdminAndSeller>
                 }
               />
               <Route
@@ -261,11 +276,11 @@ function App() {
               />
 
               <Route
-                path="/admin/createproduct"
+                path="/createproduct"
                 element={
-                  <AdminRoute>
+                  <AdminAndSeller>
                     <CreateProductPage />
-                  </AdminRoute>
+                  </AdminAndSeller>
                 }
               />
 
@@ -275,6 +290,24 @@ function App() {
                   <AdminRoute>
                     <OrderListPage />
                   </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/seller/productlist"
+                element={
+                  <SellerRoute>
+                    <ProductListPage />
+                  </SellerRoute>
+                }
+              />
+
+              <Route
+                path="/seller/orderlist"
+                element={
+                  <SellerRoute>
+                    <OrderListPage />
+                  </SellerRoute>
                 }
               />
             </Routes>

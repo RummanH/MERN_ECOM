@@ -43,6 +43,7 @@ async function getOneUserByToken(hashedToken) {
 }
 
 async function updateMe(_id, currentUpdate) {
+  console.log(currentUpdate);
   return await User.findByIdAndUpdate(_id, currentUpdate, {
     new: true,
     runValidators: true,
