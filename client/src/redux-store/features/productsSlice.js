@@ -1,16 +1,39 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import _ from 'lodash';
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+  createEntityAdapter,
+} from '@reduxjs/toolkit';
+
 import { toast } from 'react-toastify';
 
 import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
 
-const initialState = {
+const productsAdapter = createEntityAdapter({
+  selectId: (e) => e._id,
+});
+
+const initialState = productsAdapter.getInitialState({
   loading: false,
   error: '',
-  products: {},
-  successCreate: false,
-};
+});
+
+export const createProduct = createAsyncThunk(
+  'products/createProduct',
+  async (currentProduct, thunkAPI) => {
+    try {
+      const { data } = await request.post(`/products`, currentProduct, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
+      return data.data.product;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
 
 export const getAllProducts = createAsyncThunk(
   'products/getAllProducts',
@@ -32,11 +55,39 @@ export const getAllProducts = createAsyncThunk(
   }
 );
 
-export const getOneProduct = createAsyncThunk(
+export const getOneProductBySlug = createAsyncThunk(
   'products/getOneProduct',
-  async ({ slug }, thunkAPI) => {
+  async (slug, thunkAPI) => {
     try {
       const { data } = await request.get(`/products/slug/${slug}`);
+      return data.data.product;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const getOneProductById = createAsyncThunk(
+  'products/getOneProductById',
+  async (_id, thunkAPI) => {
+    try {
+      const { data } = await request.get(`/products/${_id}`);
+      return data.data.product;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(getError(err));
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async ({ _id, currentProduct }, thunkAPI) => {
+    try {
+      const { data } = await request.patch(`/products/${_id}`, currentProduct, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.token}`,
+        },
+      });
       return data.data.product;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));
@@ -63,84 +114,128 @@ export const deleteProduct = createAsyncThunk(
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {
-    getOneProductById: (state, { payload }) => {
-      state.products = {
-        ...state.products,
-        [payload._id]: payload,
-      };
-    },
-    createProduct: (state, { payload }) => {
-      state.products = {
-        ...state.products,
-        [payload._id]: payload,
-      };
-    },
-    updateProduct: (state, { payload }) => {
-      state.products = {
-        ...state.products,
-        [payload._id]: payload,
-      };
-    },
-  },
+  reducers: {},
 
-  extraReducers: {
-    [getAllProducts.pending]: (state) => {
-      state.loading = true;
-    },
+  extraReducers(builder) {
+    builder
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+      })
 
-    [getAllProducts.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.error = '';
-      state.products = {
-        ...state.products,
-        ..._.mapKeys(action.payload, '_id'),
-      };
-    },
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.error = '';
+        state.loading = false;
+        productsAdapter.addOne(state, action.payload);
+        toast.success('Successfully created product!');
+      })
 
-    [getAllProducts.rejected]: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
-    },
+      .addCase(createProduct.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+        toast.error(action.payload);
+      })
 
-    [getOneProduct.pending]: (state) => {
-      state.loading = true;
-    },
+      .addCase(getAllProducts.pending, (state) => {
+        state.loading = true;
+      })
 
-    [getOneProduct.fulfilled]: (state, action) => {
-      state.error = '';
-      state.loading = false;
-      state.products = {
-        ...state.products,
-        [action.payload._id]: action.payload,
-      };
-    },
+      .addCase(getAllProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        productsAdapter.upsertMany(state, action.payload);
+      })
 
-    [getOneProduct.rejected]: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
-    },
+      .addCase(getAllProducts.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
 
-    [deleteProduct.pending]: (state) => {
-      state.loading = true;
-    },
+      .addCase(getOneProductBySlug.pending, (state) => {
+        state.loading = true;
+      })
 
-    [deleteProduct.fulfilled]: (state, action) => {
-      state.error = '';
-      state.loading = false;
-      state.products = _.omit(state.products, action.payload);
-      toast.success('Product Deleted!');
-    },
+      .addCase(getOneProductBySlug.fulfilled, (state, action) => {
+        state.error = '';
+        state.loading = false;
+        productsAdapter.addOne(state, action.payload);
+      })
 
-    [deleteProduct.rejected]: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
-      toast.error(action.payload);
-    },
+      .addCase(getOneProductBySlug.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+
+      .addCase(getOneProductById.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(getOneProductById.fulfilled, (state, action) => {
+        state.error = '';
+        state.loading = false;
+        productsAdapter.addOne(state, action.payload);
+      })
+
+      .addCase(getOneProductById.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.error = '';
+        state.loading = false;
+        productsAdapter.upsertOne(state, action.payload);
+        toast.success('Successfully created product!');
+      })
+
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+        toast.error(action.payload);
+      })
+
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.error = '';
+        state.loading = false;
+        productsAdapter.removeOne(state, action.payload);
+        toast.success('Product Deleted!');
+      })
+
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+        toast.error(action.payload);
+      });
   },
 });
 
-export const { createProduct, getOneProductById, updateProduct } =
-  productsSlice.actions;
+export const {
+  selectAll: selectAllProducts,
+  selectById: selectProductById,
+  selectIds: selectProductsIds,
+} = productsAdapter.getSelectors((state) => state.products);
+
+export const selectProductsBySeller = createSelector(
+  [selectAllProducts, (state, sellerId) => sellerId],
+  (products, sellerId) =>
+    products.filter((product) => {
+      return product.seller._id === sellerId;
+    })
+);
+
+export const selectProductBySlug = createSelector(
+  [selectAllProducts, (state, slug) => slug],
+  (products, slug) =>
+    products.find((product) => {
+      return product.slug === slug;
+    })
+);
 
 export default productsSlice.reducer;

@@ -1,7 +1,8 @@
+const User = require('../models/users/users.mongo');
+
 const {
   getAllUsers,
   getOneUserById,
-  updateMe,
   updateUser,
   deleteUser,
 } = require('../models/users/users.model');
@@ -73,7 +74,14 @@ async function httpUpdateMe(req, res, next) {
   );
 
   // 3) Update user document
-  const user = await updateMe(req.user._id, filteredBody);
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    return res.status(404).json({ status: 'fail', message: 'User not found!' });
+  }
+
+  filteredBody.seller = { ...user.seller, ...filteredBody.seller };
+  user.set(filteredBody);
+  await user.save();
 
   return res.status(200).json({
     status: 'success',

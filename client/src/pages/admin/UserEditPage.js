@@ -49,7 +49,6 @@ const UserEditPage = () => {
           headers: { authorization: `Bearer ${token}` },
         }
       );
-      console.log(data.data);
       dispatch(updateUser(data.data.user));
       navigate('/admin/userlist');
       toast.success('User updated!');

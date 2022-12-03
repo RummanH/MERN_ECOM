@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/esm/Button';
 import Row from 'react-bootstrap/esm/Row';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LoadingBox, MessageBox } from '../../components';
 import {
   deleteProduct,
   getAllProducts,
+  selectAllProducts,
 } from '../../redux-store/features/productsSlice';
 
 const ProductListPage = (props) => {
@@ -16,15 +16,13 @@ const ProductListPage = (props) => {
 
   const sellerMode = window.location.href.includes('/seller');
 
-  const { products, loading, error } = useSelector((state) => state.products);
+  const products = useSelector(selectAllProducts);
 
   let allProducts;
   if (sellerMode) {
-    allProducts = Object.values(products).filter((p) => {
-      return p.seller._id === user._id;
-    });
+    allProducts = products.filter((p) => p.seller._id === user._id);
   } else {
-    allProducts = Object.values(products);
+    allProducts = products;
   }
 
   const handleDelete = (_id) => {
@@ -44,11 +42,7 @@ const ProductListPage = (props) => {
         </Button>
       </Row>
 
-      {loading ? (
-        <LoadingBox />
-      ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
-      ) : (
+      {
         <table className="table">
           <thead>
             <tr>
@@ -92,7 +86,7 @@ const ProductListPage = (props) => {
               ))}
           </tbody>
         </table>
-      )}
+      }
     </div>
   );
 };

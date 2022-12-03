@@ -117,7 +117,7 @@ const SearchPage = () => {
     const fetchData = async () => {
       try {
         const { data } = await request.get(`/products?${finalSearch}`);
-        console.log(data);
+
         dispatch({
           type: 'FETCH_SUCCESS',
           payload: { products: data.data.products, results: data.results },

@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema(
       name: String,
       logo: String,
       description: String,
-      rating: { type: Number },
-      numReview: { type: Number },
+      rating: { type: Number, default: 0 },
+      numReviews: { type: Number, default: 0 },
     },
     password: {
       type: String,

@@ -5,6 +5,7 @@ import FormRow from '../../components/FormRow';
 import {
   getOneProductById,
   updateProduct,
+  selectProductById,
 } from '../../redux-store/features/productsSlice';
 import { request } from '../../services/axios_request';
 import Form from 'react-bootstrap/esm/Form';
@@ -14,12 +15,10 @@ import { toast } from 'react-toastify';
 
 const ProductEditPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const params = useParams();
   const { _id } = params;
-  const products = useSelector((state) => state.products.products);
-  const product = Object.values(products).find((prod) => prod._id === _id);
-  const navigate = useNavigate();
-  const { token } = useSelector((state) => state.user);
+  const product = useSelector((state) => selectProductById(state, _id));
 
   const [name, setName] = useState(product ? product.name : '');
   const [price, setPrice] = useState(product ? product.price : '');
@@ -47,16 +46,14 @@ const ProductEditPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await request.get(`/products/${_id}`);
-        dispatch(getOneProductById(data.data.product));
-        const { product } = data.data;
-        setName(product.name);
-        setPrice(product.price);
-        setImage(product.image);
-        setCategory(product.category._id);
-        setCountInStock(product.countInStock);
-        setBrand(product.brand);
-        setDescription(product.description);
+        const p = await dispatch(getOneProductById(_id)).unwrap();
+        setName(p.name);
+        setPrice(p.price);
+        setImage(p.image);
+        setCategory(p.category._id);
+        setCountInStock(p.countInStock);
+        setBrand(p.brand);
+        setDescription(p.description);
       } catch (error) {}
     };
 
@@ -68,26 +65,20 @@ const ProductEditPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await request.patch(
-        `/products/${_id}`,
-        {
-          name,
-          price,
-          image,
-          category,
-          countInStock,
-          brand,
-          description,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
+      dispatch(
+        updateProduct({
+          _id,
+          currentProduct: {
+            name,
+            price,
+            image,
+            category,
+            countInStock,
+            brand,
+            description,
           },
-        }
+        })
       );
-
-      updateProduct(data.data.product);
-
       navigate('/admin/productlist');
     } catch (err) {
       toast.error(getError(err));
@@ -133,9 +124,11 @@ const ProductEditPage = () => {
             className="form-select"
             style={{ marginBottom: '13px', opacity: '.9' }}
           >
-            <option selected>select</option>
-            {categories.map((c) => (
-              <option value={c._id}>{c.name}</option>
+            <option defaultValue="select">select</option>
+            {categories.map((c, i) => (
+              <option key={i} value={c._id}>
+                {c.name}
+              </option>
             ))}
           </select>
 

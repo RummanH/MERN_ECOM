@@ -30,8 +30,6 @@ const OrderListPage = (props) => {
     try {
       await dispatch(deleteOrder(_id)).unwrap();
     } catch (err) {}
-
-    console.log(error);
     return;
   };
 

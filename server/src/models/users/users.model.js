@@ -42,13 +42,10 @@ async function getOneUserByToken(hashedToken) {
   }).select('+password');
 }
 
-async function updateMe(_id, currentUpdate) {
-  console.log(currentUpdate);
-  return await User.findByIdAndUpdate(_id, currentUpdate, {
-    new: true,
-    runValidators: true,
-  });
-}
+// async function updateMe(_id, currentUpdate) {
+//   const user = await User.findById(_id);
+
+// }
 
 async function updateUser(_id, currentUpdate) {
   const user = await User.findById(_id);
@@ -88,7 +85,6 @@ module.exports = {
   getOneUserById,
   getOneUserByEmail,
   getOneUserByToken,
-  updateMe,
   updateUser,
   deleteUser,
 };

@@ -17,7 +17,6 @@ const UserListPage = () => {
 
   const handleDelete = async (_id) => {
     if (window.confirm('Are you sure?')) {
-      console.log('hh');
       try {
         await request.delete(`/users/${_id}`, {
           headers: {

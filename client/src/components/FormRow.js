@@ -7,6 +7,7 @@ const FormRow = ({ name, labelText, type, handleChange, value }) => {
     <Form.Group className="mb-3" controlId={name}>
       <Form.Label>{labelText || name}</Form.Label>
       <Form.Control
+        style={{ fontSize: '1.7rem' }}
         type={type}
         required
         name={name}

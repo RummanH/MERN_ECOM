@@ -49,9 +49,11 @@ const Product = ({ product }) => {
 
         <Row>
           <Card.Text>${product.price}</Card.Text>
-          <Link to={`/seller/${product.seller._id}`}>
-            {product.seller.name}
-          </Link>
+          <div className="row">
+            <Link to={`/seller/${product.seller._id}`}>
+              {product.seller.name}
+            </Link>
+          </div>
         </Row>
 
         {product.countInStock === 0 ? (

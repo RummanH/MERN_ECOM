@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import React, { useEffect } from 'react';
@@ -11,9 +11,12 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-import { getOneProduct } from '../redux-store/features/productsSlice';
+import {
+  getOneProductBySlug,
+  selectProductBySlug,
+} from '../redux-store/features/productsSlice';
 import { addItem, increase } from '../redux-store/features/cartSlice';
-import { LoadingBox, MessageBox, Rating } from '../components';
+import { Rating } from '../components';
 import { request } from '../services/axios_request';
 
 const ProductPage = () => {
@@ -24,14 +27,12 @@ const ProductPage = () => {
   const { slug } = params;
 
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
   const { cartItems } = useSelector((state) => state.cart);
-  const product = Object.values(products).find(
-    (product) => product.slug === slug
-  );
+
+  const product = useSelector((state) => selectProductBySlug(state, slug));
 
   useEffect(() => {
-    dispatch(getOneProduct({ slug }));
+    dispatch(getOneProductBySlug(slug));
   }, [slug, dispatch]);
 
   const handleAddToCart = async () => {
@@ -53,11 +54,7 @@ const ProductPage = () => {
     navigate('/cart');
   };
 
-  return loading ? (
-    <LoadingBox />
-  ) : error ? (
-    <MessageBox variant="danger">{error}</MessageBox>
-  ) : (
+  return (
     product && (
       <div>
         <Row>
@@ -88,6 +85,18 @@ const ProductPage = () => {
             <Card>
               <Card.Body>
                 <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    Seller{' '}
+                    <h2>
+                      <Link to={`/seller/${product.seller._id}`}>
+                        {product.seller.seller.name}
+                      </Link>
+                    </h2>
+                    <Rating
+                      rating={product.seller.seller.rating}
+                      numReviews={product.seller.seller.numReviews}
+                    />
+                  </ListGroup.Item>
                   <ListGroup.Item>
                     <Row>
                       <Col>Price:</Col>

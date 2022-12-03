@@ -6,18 +6,20 @@ import React, { useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { getAllProducts } from '../redux-store/features/productsSlice';
+import {
+  getAllProducts,
+  selectAllProducts,
+} from '../redux-store/features/productsSlice';
 import { LoadingBox, MessageBox, Product } from '../components';
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { products, error, loading } = useSelector((state) => state.products);
+  const { error, loading } = useSelector((state) => state.products);
 
-  const allProducts = Object.values(products);
+  const allProducts = useSelector(selectAllProducts);
 
   useEffect(() => {
     dispatch(getAllProducts());
-    console.log('hello');
   }, [dispatch]);
 
   return (

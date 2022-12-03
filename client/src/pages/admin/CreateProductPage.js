@@ -52,18 +52,17 @@ const CreateProductPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await request.post(
-        '/products',
-        { name, price, image, category, countInStock, brand, description },
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      dispatch(createProduct(data.data.product));
-      toast.success('Product created!');
+      await dispatch(
+        createProduct({
+          name,
+          price,
+          image,
+          category,
+          countInStock,
+          brand,
+          description,
+        })
+      ).unwrap();
       navigate('/admin/productlist');
     } catch (err) {
       toast.error(getError(err));

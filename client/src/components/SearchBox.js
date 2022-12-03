@@ -16,6 +16,7 @@ const SearchBox = () => {
     <Form className="d-flex me-auto" onSubmit={handleSubmit}>
       <InputGroup>
         <FormControl
+          style={{ fontSize: '1.5rem' }}
           type="text"
           name="q"
           id="q"
