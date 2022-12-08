@@ -5,6 +5,7 @@ const {
   getOneUserById,
   updateUser,
   deleteUser,
+  getTopSellers,
 } = require('../models/users/users.model');
 const AppError = require('../services/AppError');
 
@@ -100,10 +101,18 @@ async function httpDeleteUser(req, res, next) {
   return res.status(204).json({ status: 'success', data: null });
 }
 
+async function httpGetTopSellers(req, res, next) {
+  const sellers = await getTopSellers();
+  return res
+    .status(200)
+    .json({ status: 'success', results: sellers.length, data: { sellers } });
+}
+
 module.exports = {
   httpGetOneUser,
   httpGetAllUsers,
   httpUpdateMe,
   httpUpdateUser,
   httpDeleteUser,
+  httpGetTopSellers,
 };

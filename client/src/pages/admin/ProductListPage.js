@@ -1,38 +1,39 @@
-import React, { useEffect } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Row from 'react-bootstrap/esm/Row';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import AdminProductTable from '../../components/AdminProductTable';
 import {
-  deleteProduct,
-  getAllProducts,
   selectAllProducts,
-} from '../../redux-store/features/productsSlice';
+  useGetAllProductsQuery,
+} from '../../redux-store/features/productSlice';
+import UserListPage from './UserListPage';
 
 const ProductListPage = (props) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  console.log(user._id);
+  const {
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+    data: products,
+  } = useGetAllProductsQuery(undefined, {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
+  let allP = useSelector(selectAllProducts);
+  console.log(allP);
 
   const sellerMode = window.location.href.includes('/seller');
-
-  const products = useSelector(selectAllProducts);
-
-  let allProducts;
-  if (sellerMode) {
-    allProducts = products.filter((p) => p.seller._id === user._id);
-  } else {
-    allProducts = products;
+  if (sellerMode && allP) {
+    allP = allP.filter((p) => p.seller._id === user._id);
   }
+  console.log(allP);
 
-  const handleDelete = (_id) => {
-    if (window.confirm('Are you sure?')) dispatch(deleteProduct(_id));
-    return;
-  };
-
-  useEffect(() => {
-    dispatch(getAllProducts(sellerMode ? user._id : ''));
-  }, [dispatch, sellerMode, user]);
   return (
     <div>
       <Row>
@@ -56,33 +57,9 @@ const ProductListPage = (props) => {
             </tr>
           </thead>
           <tbody>
-            {allProducts &&
-              allProducts.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>{product.price}</td>
-                  <td>{product.category.name}</td>
-                  <td>{product.brand}</td>
-                  <td>{product.countInStock}</td>
-                  <td>
-                    <Button
-                      variant="primary"
-                      type="button"
-                      onClick={() => navigate(`/product/${product._id}/edit`)}
-                      style={{ marginRight: '5px' }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="light"
-                      type="button"
-                      onClick={() => handleDelete(product._id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
+            {allP &&
+              allP.map((product) => (
+                <AdminProductTable productId={product._id} />
               ))}
           </tbody>
         </table>

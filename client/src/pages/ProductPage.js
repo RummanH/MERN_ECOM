@@ -1,7 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
-import React, { useEffect } from 'react';
 
 //Bootstrap
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -11,10 +10,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-import {
-  getOneProductBySlug,
-  selectProductBySlug,
-} from '../redux-store/features/productsSlice';
+import { selectProductBySlug } from '../redux-store/features/productSlice';
 import { addItem, increase } from '../redux-store/features/cartSlice';
 import { Rating } from '../components';
 import { request } from '../services/axios_request';
@@ -30,10 +26,6 @@ const ProductPage = () => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const product = useSelector((state) => selectProductBySlug(state, slug));
-
-  useEffect(() => {
-    dispatch(getOneProductBySlug(slug));
-  }, [slug, dispatch]);
 
   const handleAddToCart = async () => {
     const existItem = cartItems.find((item) => item._id === product._id);

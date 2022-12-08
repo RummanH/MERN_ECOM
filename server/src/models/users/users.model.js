@@ -79,6 +79,14 @@ async function deleteUser(_id) {
   return await User.findByIdAndDelete(_id);
 }
 
+async function getTopSellers() {
+  return await User.find({ roles: { $in: 'seller' } })
+    .sort({
+      'seller.rating': -1,
+    })
+    .limit(3);
+}
+
 module.exports = {
   saveUser,
   getAllUsers,
@@ -87,4 +95,5 @@ module.exports = {
   getOneUserByToken,
   updateUser,
   deleteUser,
+  getTopSellers,
 };

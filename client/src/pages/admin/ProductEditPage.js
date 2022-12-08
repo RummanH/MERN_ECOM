@@ -2,22 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormRow from '../../components/FormRow';
-import {
-  getOneProductById,
-  updateProduct,
-  selectProductById,
-} from '../../redux-store/features/productsSlice';
+
 import { request } from '../../services/axios_request';
 import Form from 'react-bootstrap/esm/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { getError } from '../../services/getError';
 import { toast } from 'react-toastify';
+import {
+  selectProductById,
+  useUpdateProductMutation,
+} from '../../redux-store/features/productSlice';
+import { LoadingBox } from '../../components';
 
 const ProductEditPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
   const { _id } = params;
+
+  const [
+    updateProduct,
+    {
+      isLoading: updateProductIsLoading,
+      isSuccess: updateProductIsSuccess,
+      isError: updateProductIsError,
+      error: updateProductError,
+    },
+  ] = useUpdateProductMutation();
+
+  // here I don't need
+  // const {
+  //   isLoading: getOneProductByIdIsLoading,
+  //   isSuccess: getOneProductByIdIsSuccess,
+  //   isError: getOneProductByIdIsError,
+  //   error: getOneProductByIdError,
+  //   data,
+  // } = useGetOneProductByIdQuery(_id, {
+  //   pollingInterval: 60000,
+  //   refetchOnFocus: true,
+  //   refetchOnMountOrArgChange: true,
+  // });
+
   const product = useSelector((state) => selectProductById(state, _id));
 
   const [name, setName] = useState(product ? product.name : '');
@@ -44,41 +69,34 @@ const ProductEditPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const p = await dispatch(getOneProductById(_id)).unwrap();
-        setName(p.name);
-        setPrice(p.price);
-        setImage(p.image);
-        setCategory(p.category._id);
-        setCountInStock(p.countInStock);
-        setBrand(p.brand);
-        setDescription(p.description);
-      } catch (error) {}
-    };
-
-    if (!product) {
-      fetchProduct();
+    if (product) {
+      setName(product.name);
+      setPrice(product.price);
+      setImage(product.image);
+      setCategory(product.category._id);
+      setCountInStock(product.countInStock);
+      setBrand(product.brand);
+      setDescription(product.description);
     }
-  }, [_id, dispatch, product]);
+  }, [product]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(name, brand);
     try {
-      dispatch(
-        updateProduct({
-          _id,
-          currentProduct: {
-            name,
-            price,
-            image,
-            category,
-            countInStock,
-            brand,
-            description,
-          },
-        })
-      );
+      await updateProduct({
+        _id,
+        currentUpdate: {
+          name,
+          price,
+          image,
+          category,
+          countInStock,
+          brand,
+          description,
+        },
+      });
+
       navigate('/admin/productlist');
     } catch (err) {
       toast.error(getError(err));
@@ -158,9 +176,13 @@ const ProductEditPage = () => {
             handleChange={(e) => setDescription(e.target.value)}
             value={description}
           />
-          <Button variant="primary" type="submit">
-            Update
-          </Button>
+          {updateProductIsLoading ? (
+            <LoadingBox />
+          ) : (
+            <Button variant="primary" type="submit">
+              Update product
+            </Button>
+          )}
         </Form>
       )}
     </div>

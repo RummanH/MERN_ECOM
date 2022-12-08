@@ -98,7 +98,7 @@ export const getAllUsers = createAsyncThunk(
   async (param, thunkAPI) => {
     //thunkAPI for getting other features values dispatch actions from other features and rejectWithValue
     try {
-      const { data } = await request.get(`/users`, {
+      const { data } = await request.get(`/users?sort=name`, {
         headers: {
           authorization: `Bearer ${thunkAPI.getState().user.token}`,
         },
@@ -120,7 +120,6 @@ export const getOneUser = createAsyncThunk(
           authorization: `Bearer ${thunkAPI.getState().user.token}`,
         },
       });
-
       return data.data.user;
     } catch (err) {
       return thunkAPI.rejectWithValue(getError(err));

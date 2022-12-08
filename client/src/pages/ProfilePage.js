@@ -4,10 +4,12 @@ import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormRow } from '../components';
 import { updateMe } from '../redux-store/features/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [values, setValue] = useState({
     name: user.name,
@@ -22,17 +24,20 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(
-      updateMe({
-        name: values.name,
-        email: values.email,
-        seller: {
-          name: values.sellerName,
-          logo: values.sellerLogo,
-          description: values.description,
-        },
-      })
-    );
+    try {
+      dispatch(
+        updateMe({
+          name: values.name,
+          email: values.email,
+          seller: {
+            name: values.sellerName,
+            logo: values.sellerLogo,
+            description: values.description,
+          },
+        })
+      ).unwrap();
+      navigate('/');
+    } catch (err) {}
   };
 
   return (

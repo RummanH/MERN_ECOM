@@ -11,6 +11,7 @@ const {
   httpGetOneUser,
   httpUpdateUser,
   httpDeleteUser,
+  httpGetTopSellers,
 } = require('../controllers/users.controller');
 
 const orderRouter = require('./orders.router');
@@ -24,6 +25,7 @@ router.use('/:userId/orders', orderRouter);
 //Not RESTFul for all user
 router.post('/signup', catchAsync(httpSignupUser));
 router.post('/login', catchAsync(httpLoginUser));
+router.get('/top-sellers', catchAsync(httpGetTopSellers));
 
 //From this point all protected routes
 router.use(catchAsync(httpProtect));

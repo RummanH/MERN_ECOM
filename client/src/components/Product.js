@@ -9,8 +9,10 @@ import { addItem, increase } from '../redux-store/features/cartSlice';
 import { request } from '../services/axios_request';
 import Rating from './Rating';
 import Row from 'react-bootstrap/esm/Row';
+import { selectProductById } from '../redux-store/features/productSlice';
 
-const Product = ({ product }) => {
+const Product = ({ productId }) => {
+  const product = useSelector((state) => selectProductById(state, productId));
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
   const [adding, setAdding] = useState(false);
@@ -36,35 +38,47 @@ const Product = ({ product }) => {
   };
 
   return (
-    <Card>
-      <Link to={`/product/${product.slug}`}>
-        <img className="card-img-top" src={product.image} alt={product.name} />
-      </Link>
+    <>
+      {product && (
+        <Card>
+          <Link to={`/product/${product.slug}`}>
+            <img
+              className="card-img-top"
+              src={product.image}
+              alt={product.name}
+            />
+          </Link>
 
-      <Card.Body>
-        <Link to={`/product/${product.slug}`}>
-          <Card.Title>{product.name}</Card.Title>
-          <Rating rating={product.rating} numReviews={product.numReviews} />
-        </Link>
-
-        <Row>
-          <Card.Text>${product.price}</Card.Text>
-          <div className="row">
-            <Link to={`/seller/${product.seller._id}`}>
-              {product.seller.name}
+          <Card.Body>
+            <Link to={`/product/${product.slug}`}>
+              <Card.Title>{product.name}</Card.Title>
+              <Rating rating={product.rating} numReviews={product.numReviews} />
             </Link>
-          </div>
-        </Row>
 
-        {product.countInStock === 0 ? (
-          <Button variant="light">Out of stock</Button>
-        ) : (
-          <Button variant="primary" onClick={handleAddToCart} disabled={adding}>
-            Add to Cart
-          </Button>
-        )}
-      </Card.Body>
-    </Card>
+            <Row>
+              <Card.Text>${product.price}</Card.Text>
+              <div className="row">
+                <Link to={`/seller/${product.seller._id}`}>
+                  {product.seller.name}
+                </Link>
+              </div>
+            </Row>
+
+            {product.countInStock === 0 ? (
+              <Button variant="light">Out of stock</Button>
+            ) : (
+              <Button
+                variant="primary"
+                onClick={handleAddToCart}
+                disabled={adding}
+              >
+                Add to Cart
+              </Button>
+            )}
+          </Card.Body>
+        </Card>
+      )}
+    </>
   );
 };
 

@@ -88,7 +88,7 @@ main {
 }
 
 html {
-  font-size: 80%; /* 16px x 62.5 = 10px = 1rem */
+  font-size: 67%; /* 16px x 62.5 = 10px = 1rem */
   box-sizing: border-box;
 }
 body {
@@ -555,4 +555,8 @@ img.large {
 }
 .support-users .unread {
   background-color: #f02020;
+}
+
+.carousel .slide img {
+  max-width: 15rem;
 }

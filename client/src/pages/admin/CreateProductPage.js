@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -7,14 +6,14 @@ import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 
-import { createProduct } from '../../redux-store/features/productsSlice';
 import { request } from '../../services/axios_request';
 import { getError } from '../../services/getError';
 import { FormRow, LoadingBox, MessageBox } from '../../components';
+import { useCreateProductMutation } from '../../redux-store/features/productSlice';
+import { useSelector } from 'react-redux';
 
 const CreateProductPage = () => {
   const { token } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -28,6 +27,16 @@ const CreateProductPage = () => {
 
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [errorUpload, setErrorUpload] = useState('');
+
+  const [
+    createProduct,
+    {
+      isLoading: createProductIsLoading,
+      isSuccess: createProductIsSuccess,
+      isError: createProductIsError,
+      error: createProductError,
+    },
+  ] = useCreateProductMutation();
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -52,17 +61,15 @@ const CreateProductPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(
-        createProduct({
-          name,
-          price,
-          image,
-          category,
-          countInStock,
-          brand,
-          description,
-        })
-      ).unwrap();
+      await createProduct({
+        name,
+        price,
+        image,
+        category,
+        countInStock,
+        brand,
+        description,
+      }).unwrap();
       navigate('/admin/productlist');
     } catch (err) {
       toast.error(getError(err));
@@ -78,6 +85,18 @@ const CreateProductPage = () => {
     };
     fetchCategory();
   }, []);
+
+  useEffect(() => {
+    if (createProductIsSuccess) {
+      setName('');
+      setPrice(0);
+      setImage('');
+      setCategory('');
+      setCountInStock(0);
+      setBrand('');
+      setDescription('');
+    }
+  }, [createProductIsSuccess, navigate]);
 
   return (
     <div className="container small-container">
@@ -166,9 +185,13 @@ const CreateProductPage = () => {
           handleChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-        <Button variant="primary" type="submit">
-          Update
-        </Button>
+        {createProductIsLoading ? (
+          <LoadingBox />
+        ) : (
+          <Button variant="primary" type="submit">
+            Create Product
+          </Button>
+        )}
       </Form>
     </div>
   );

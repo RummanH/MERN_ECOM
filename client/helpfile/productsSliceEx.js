@@ -7,8 +7,8 @@ import {
 
 import { toast } from 'react-toastify';
 
-import { request } from '../../services/axios_request';
-import { getError } from '../../services/getError';
+import { request } from '../src/services/axios_request';
+import { getError } from '../src/services/getError';
 
 const productsAdapter = createEntityAdapter({
   selectId: (e) => e._id,

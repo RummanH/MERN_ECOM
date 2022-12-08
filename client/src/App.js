@@ -49,6 +49,7 @@ import { AdminRoute, ProtectedRoute, SearchBox } from './components';
 import SellerRoute from './components/SellerRoute';
 import AdminAndSeller from './components/AdminAndSeller';
 import SellerPage from './pages/SellerPage';
+import Prefetch from './components/Prefetch';
 
 function App() {
   const dispatch = useDispatch();
@@ -197,30 +198,11 @@ function App() {
             <Routes>
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/signin" element={<SignInPage />} />
-              <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/product/:slug" element={<ProductPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/shipping" element={<ShippingAddressPage />} />
               <Route path="/payment" element={<PaymentMethodPage />} />
               <Route path="/placeorder" element={<PlaceOrderPage />} />
-              <Route
-                path="/order/:id"
-                element={
-                  <ProtectedRoute>
-                    <OrderPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/orderhistory"
-                element={
-                  <ProtectedRoute>
-                    <OrderHistoryPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/order/:id/:completed" element={<OrderPage />} />
+              <Route path="/setting" element={<SettingsPage />} />
               <Route
                 path="/profile"
                 element={
@@ -229,87 +211,108 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/setting" element={<SettingsPage />} />
 
-              <Route path="/seller/:sellerId" element={<SellerPage />} />
+              <Route element={<Prefetch />}>
+                <Route
+                  path="/order/:id"
+                  element={
+                    <ProtectedRoute>
+                      <OrderPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/product/:slug" element={<ProductPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route
+                  path="/orderhistory"
+                  element={
+                    <ProtectedRoute>
+                      <OrderHistoryPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/order/:id/:completed" element={<OrderPage />} />
+                <Route path="/seller/:sellerId" element={<SellerPage />} />
 
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <AdminRoute>
-                    <DashboardPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/product/:_id/edit"
-                element={
-                  <AdminAndSeller>
-                    <ProductEditPage />
-                  </AdminAndSeller>
-                }
-              />
-              <Route
-                path="/admin/userlist"
-                element={
-                  <AdminRoute>
-                    <UserListPage />
-                  </AdminRoute>
-                }
-              />
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <AdminRoute>
+                      <DashboardPage />
+                    </AdminRoute>
+                  }
+                />
+                <Route
+                  path="/product/:_id/edit"
+                  element={
+                    <AdminAndSeller>
+                      <ProductEditPage />
+                    </AdminAndSeller>
+                  }
+                />
+                <Route
+                  path="/admin/userlist"
+                  element={
+                    <AdminRoute>
+                      <UserListPage />
+                    </AdminRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/user/:_id/edit"
-                element={
-                  <AdminAndSeller>
-                    <UserEditPage />
-                  </AdminAndSeller>
-                }
-              />
-              <Route
-                path="/admin/productlist"
-                element={
-                  <AdminRoute>
-                    <ProductListPage />
-                  </AdminRoute>
-                }
-              />
+                <Route
+                  path="/admin/user/:_id/edit"
+                  element={
+                    <AdminAndSeller>
+                      <UserEditPage />
+                    </AdminAndSeller>
+                  }
+                />
+                <Route
+                  path="/admin/productlist"
+                  element={
+                    <AdminRoute>
+                      <ProductListPage />
+                    </AdminRoute>
+                  }
+                />
 
-              <Route
-                path="/createproduct"
-                element={
-                  <AdminAndSeller>
-                    <CreateProductPage />
-                  </AdminAndSeller>
-                }
-              />
+                <Route
+                  path="/createproduct"
+                  element={
+                    <AdminAndSeller>
+                      <CreateProductPage />
+                    </AdminAndSeller>
+                  }
+                />
 
-              <Route
-                path="/admin/orderlist"
-                element={
-                  <AdminRoute>
-                    <OrderListPage />
-                  </AdminRoute>
-                }
-              />
+                <Route
+                  path="/admin/orderlist"
+                  element={
+                    <AdminRoute>
+                      <OrderListPage />
+                    </AdminRoute>
+                  }
+                />
 
-              <Route
-                path="/seller/productlist"
-                element={
-                  <SellerRoute>
-                    <ProductListPage />
-                  </SellerRoute>
-                }
-              />
+                <Route
+                  path="/seller/productlist"
+                  element={
+                    <SellerRoute>
+                      <ProductListPage />
+                    </SellerRoute>
+                  }
+                />
 
-              <Route
-                path="/seller/orderlist"
-                element={
-                  <SellerRoute>
-                    <OrderListPage />
-                  </SellerRoute>
-                }
-              />
+                <Route
+                  path="/seller/orderlist"
+                  element={
+                    <SellerRoute>
+                      <OrderListPage />
+                    </SellerRoute>
+                  }
+                />
+              </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Container>
