@@ -113,7 +113,6 @@ export const getAllUsers = createAsyncThunk(
 export const getOneUser = createAsyncThunk(
   'products/getOneUser',
   async (_id, thunkAPI) => {
-    console.log(_id);
     try {
       const { data } = await request.get(`/users/${_id}`, {
         headers: {
@@ -132,7 +131,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateUser: (state, { payload }) => {
-      console.log(payload);
       state.users = {
         ...state.users,
         [payload._id]: payload,

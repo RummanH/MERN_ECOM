@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/esm/Button';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   selectProductById,
@@ -12,10 +12,9 @@ const AdminProductTable = ({ productId }) => {
     deleteProduct,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteProductMutation();
-  console.log(productId);
   const product = useSelector((state) => selectProductById(state, productId));
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const handleDelete = (_id) => {
     if (window.confirm('Are you sure?')) deleteProduct(_id);
     return;

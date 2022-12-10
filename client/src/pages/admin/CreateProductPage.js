@@ -138,6 +138,11 @@ const CreateProductPage = () => {
             id="imageFile"
             label="Choose Image"
             onChange={uploadFileHandler}
+            style={{
+              opacity: '.9',
+              padding: '5px',
+              fontSize: '1.5rem',
+            }}
           />
           {loadingUpload && <LoadingBox />}
           {errorUpload && (
@@ -151,11 +156,20 @@ const CreateProductPage = () => {
         <select
           onChange={(e) => setCategory(e.target.value)}
           className="form-select"
-          style={{ marginBottom: '13px', opacity: '.9' }}
+          style={{
+            marginBottom: '13px',
+            opacity: '.9',
+            padding: '5px',
+            fontSize: '1.5rem',
+          }}
         >
-          <option selected>select</option>
+          <option defaultValue="select">select</option>
           {categories.map((c) => {
-            return <option value={c._id}>{c.name}</option>;
+            return (
+              <option value={c._id} key={c._id}>
+                {c.name}
+              </option>
+            );
           })}
         </select>
 
@@ -188,7 +202,11 @@ const CreateProductPage = () => {
         {createProductIsLoading ? (
           <LoadingBox />
         ) : (
-          <Button variant="primary" type="submit">
+          <Button
+            variant="primary"
+            type="submit"
+            style={{ width: '100%', fontSize: '1.5rem' }}
+          >
             Create Product
           </Button>
         )}

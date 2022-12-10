@@ -94,7 +94,7 @@ function App() {
                 variant="dark"
                 onClick={() => setSideBarIsOpen(!sideBarIsOpen)}
               >
-                <i className="fas fa-bars"></i>
+                <i className="fas fa-bars" style={{ fontSize: '1.6rem' }}></i>
               </Button>
 
               <LinkContainer to="/">

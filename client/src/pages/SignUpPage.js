@@ -85,7 +85,9 @@ const SignUpPage = () => {
           value={values.passwordConfirm}
         />
         <div className="mb-3">
-          <Button type="submit">Signup</Button>
+          <Button type="submit" style={{ width: '100%', fontSize: '1.5rem' }}>
+            Signup
+          </Button>
         </div>
 
         <div className="mb-3">

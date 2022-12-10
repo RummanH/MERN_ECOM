@@ -15,7 +15,6 @@ import {
 import { LoadingBox } from '../../components';
 
 const ProductEditPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
   const { _id } = params;
@@ -82,7 +81,6 @@ const ProductEditPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, brand);
     try {
       await updateProduct({
         _id,
@@ -140,7 +138,12 @@ const ProductEditPage = () => {
           <select
             onChange={(e) => setCategory(e.target.value)}
             className="form-select"
-            style={{ marginBottom: '13px', opacity: '.9' }}
+            style={{
+              marginBottom: '13px',
+              opacity: '.9',
+              padding: '5px',
+              fontSize: '1.5rem',
+            }}
           >
             <option defaultValue="select">select</option>
             {categories.map((c, i) => (
@@ -179,7 +182,11 @@ const ProductEditPage = () => {
           {updateProductIsLoading ? (
             <LoadingBox />
           ) : (
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ width: '100%', fontSize: '1.5rem' }}
+            >
               Update product
             </Button>
           )}

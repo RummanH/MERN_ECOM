@@ -15,6 +15,7 @@ const initialState = {
     ? JSON.parse(localStorage.getItem('shippingAddress'))
     : {},
   paymentMethod: localStorage.getItem('paymentMethod') || '',
+  error: '',
 };
 
 const cartSlice = createSlice({
@@ -23,6 +24,7 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, { payload }) => {
       //here payload is whole item with quantity
+      state.error = '';
       state.cartItems.push(payload);
       setToLocalStorage('cart', JSON.stringify(state.cartItems));
     },

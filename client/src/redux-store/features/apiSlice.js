@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://localhost:5000/api/v1',
+    baseUrl: 'api/v1',
     prepareHeaders: (headers, { getState }) => {
       const token = getState().user.token;
       // If we have a token set in state, let's assume that we should be passing it.

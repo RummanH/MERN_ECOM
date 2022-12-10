@@ -34,7 +34,7 @@ const SellerPage = () => {
 
   useEffect(() => {
     dispatch(getOneUser(sellerId));
-  }, [sellerId]);
+  }, [sellerId, dispatch]);
   return (
     <div>
       {user && (

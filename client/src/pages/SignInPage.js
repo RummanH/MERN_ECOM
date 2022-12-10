@@ -76,15 +76,27 @@ const SignInPage = () => {
         />
 
         <div className="mb-3">
-          <Button type="submit">Sign In</Button>
+          <Button type="submit" style={{ width: '100%', fontSize: '1.5rem' }}>
+            Sign In
+          </Button>
         </div>
 
-        <p className="center">Or</p>
+        <p
+          className="center"
+          style={{ width: '100%', fontSize: '1.5rem', textAlign: 'center' }}
+        >
+          Or
+        </p>
         <button
           onClick={googleButtonClick}
           type="button"
           className="btn btn-block"
-          style={{ backgroundColor: '#dd4b39', color: 'white' }}
+          style={{
+            backgroundColor: '#dd4b39',
+            color: 'white',
+            width: '100%',
+            fontSize: '1.5rem',
+          }}
         >
           Login with google
         </button>

@@ -94,7 +94,11 @@ const ShippingAddressPage = () => {
           />
 
           <div className="mb-3">
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ width: '100%', fontSize: '1.5rem' }}
+            >
               Continue
             </Button>
           </div>

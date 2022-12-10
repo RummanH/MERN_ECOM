@@ -13,32 +13,31 @@ const ProductListPage = (props) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   console.log(user._id);
-  const {
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-    data: products,
-  } = useGetAllProductsQuery(undefined, {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
+  const { isLoading, isSuccess, isError, error, data } = useGetAllProductsQuery(
+    undefined,
+    {
+      pollingInterval: 60000,
+      refetchOnFocus: true,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
-  let allP = useSelector(selectAllProducts);
-  console.log(allP);
+  let products = useSelector(selectAllProducts);
 
   const sellerMode = window.location.href.includes('/seller');
-  if (sellerMode && allP) {
-    allP = allP.filter((p) => p.seller._id === user._id);
+  if (sellerMode && products) {
+    products = products.filter((product) => product.seller._id === user._id);
   }
-  console.log(allP);
 
   return (
     <div>
       <Row>
         <h1>Products</h1>
-        <Button variant="primary" onClick={() => navigate('/createproduct')}>
+        <Button
+          variant="primary"
+          onClick={() => navigate('/createproduct')}
+          style={{ width: '100%', fontSize: '1.5rem' }}
+        >
           Create Product
         </Button>
       </Row>
@@ -57,9 +56,9 @@ const ProductListPage = (props) => {
             </tr>
           </thead>
           <tbody>
-            {allP &&
-              allP.map((product) => (
-                <AdminProductTable productId={product._id} />
+            {products &&
+              products.map((product) => (
+                <AdminProductTable productId={product._id} key={product._id} />
               ))}
           </tbody>
         </table>

@@ -279,6 +279,7 @@ const OrderPage = () => {
                           <Button
                             variant="primary"
                             onClick={handleStripeCheckout}
+                            style={{ width: '100%', fontSize: '1.5rem' }}
                           >
                             Checkout with Stripe
                           </Button>
@@ -311,6 +312,7 @@ const OrderPage = () => {
                           <Button
                             type="button"
                             onClick={() => handleDeliver(order._id)}
+                            style={{ width: '100%', fontSize: '1.5rem' }}
                           >
                             Deliver Order
                           </Button>

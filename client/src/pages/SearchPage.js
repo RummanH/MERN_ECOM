@@ -168,7 +168,7 @@ const SearchPage = () => {
               ))}
             </ul>
           </div>
-
+          <hr />
           <div>
             <h3>Price</h3>
             <ul>
@@ -193,7 +193,7 @@ const SearchPage = () => {
               ))}
             </ul>
           </div>
-
+          <hr />
           <div>
             <h3>Avg. Customer Review</h3>
             <ul>

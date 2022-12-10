@@ -10,6 +10,7 @@ import { request } from '../services/axios_request';
 import Rating from './Rating';
 import Row from 'react-bootstrap/esm/Row';
 import { selectProductById } from '../redux-store/features/productSlice';
+import { toast } from 'react-toastify';
 
 const Product = ({ productId }) => {
   const product = useSelector((state) => selectProductById(state, productId));
@@ -19,20 +20,29 @@ const Product = ({ productId }) => {
 
   const handleAddToCart = async () => {
     setAdding(true);
-    const existItem = cartItems.find((item) => item._id === product._id);
-    const quantity = existItem ? existItem.quantity : 0;
-    const { data } = await request.get(`/products/${product._id}`);
-
-    //can use any value if not 1
-    if (data.data.product.countInStock < quantity + 1) {
-      window.alert('Sorry. Product is out of stock');
-      return;
-    }
-
-    if (existItem) {
-      dispatch(increase({ ...product, quantity: 1 }));
+    if (
+      cartItems.length > 0 &&
+      product.seller._id !== cartItems[0].seller._id
+    ) {
+      toast.error(
+        `Cannot add to Cart. Buy only from ${cartItems[0].seller.seller.name} in this order.`
+      );
     } else {
-      dispatch(addItem({ ...product, quantity: 1 }));
+      const existItem = cartItems.find((item) => item._id === product._id);
+      const quantity = existItem ? existItem.quantity : 0;
+      const { data } = await request.get(`/products/${product._id}`);
+
+      //can use any value if not 1
+      if (data.data.product.countInStock < quantity + 1) {
+        window.alert('Sorry. Product is out of stock');
+        return;
+      }
+
+      if (existItem) {
+        dispatch(increase({ ...product, quantity: 1 }));
+      } else {
+        dispatch(addItem({ ...product, quantity: 1 }));
+      }
     }
     setAdding(false);
   };

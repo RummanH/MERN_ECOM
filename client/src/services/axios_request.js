@@ -3,7 +3,7 @@ import axios from 'axios';
 import { store } from '../redux-store/store';
 
 const request = axios.create({
-  baseURL: 'https://localhost:5000/api/v1',
+  baseURL: 'api/v1',
 });
 
 request.defaults.withCredentials = true;
@@ -14,7 +14,6 @@ request.interceptors.request.use(
   (config) => {
     // Do something before request is sent
 
-    console.log(store.getState());
     // config.headers.common['Authorization'] = '';
     return config;
   },

@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { FormRow } from '../components';
 import { changePassword } from '../redux-store/features/userSlice';
 
 const SettingsPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [values, setValue] = useState({
     currentPassword: '',
@@ -19,13 +21,17 @@ const SettingsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(
-      changePassword({
-        currentPassword: values.currentPassword,
-        password: values.password,
-        passwordConfirm: values.passwordConfirm,
-      })
-    );
+    try {
+      dispatch(
+        changePassword({
+          currentPassword: values.currentPassword,
+          password: values.password,
+          passwordConfirm: values.passwordConfirm,
+        })
+      ).unwrap();
+      setValue({ currentPassword: '', password: '', passwordConfirm: '' });
+      navigate('/');
+    } catch (err) {}
   };
 
   return (
@@ -63,7 +69,9 @@ const SettingsPage = () => {
         />
 
         <div className="mb-3">
-          <Button type="submit">Change Password</Button>
+          <Button type="submit" style={{ width: '100%', fontSize: '1.5rem' }}>
+            Change Password
+          </Button>
         </div>
       </form>
     </div>

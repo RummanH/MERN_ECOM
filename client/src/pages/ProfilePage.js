@@ -98,7 +98,9 @@ const ProfilePage = () => {
         )}
 
         <div className="mb-3">
-          <Button type="submit">Update</Button>
+          <Button type="submit" style={{ width: '100%', fontSize: '1.5rem' }}>
+            Update
+          </Button>
         </div>
       </form>
     </div>

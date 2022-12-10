@@ -560,3 +560,9 @@ img.large {
 .carousel .slide img {
   max-width: 15rem;
 }
+
+*:focus {
+  outline: none;
+  /* outline: 4px dotted red;
+  outline-offset: 8px; */
+}
